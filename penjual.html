@@ -1,1 +1,173 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Pengaturan karakter dan ukuran layar -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>POV Penjual | KantinQ</title>
+
+  <!-- Menggunakan desain utama dan desain khusus penjual -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="penjual.css">
+</head>
+<body>
+
+  <!-- Header dashboard penjual -->
+  <header class="seller-header">
+    <div class="seller-header-inner">
+      <div>
+        <h1>Kantin<span>Q</span> Seller</h1>
+        <p>Dashboard pengelolaan kantin sekolah</p>
+      </div>
+
+      <!-- Kembali ke halaman pembeli -->
+      <a href="index.html" class="back-link">Halaman Pembeli</a>
+    </div>
+  </header>
+
+  <main class="seller-container">
+
+    <!-- Navigasi bagian dashboard -->
+    <nav class="seller-nav" aria-label="Navigasi penjual">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#orders">Pesanan</a>
+      <a href="#products">Kelola Menu</a>
+    </nav>
+
+    <!-- ================= DASHBOARD ================= -->
+    <section id="dashboard" class="seller-section">
+      <div class="section-heading">
+        <div>
+          <h2>Dashboard Penjual</h2>
+          <p>Ringkasan aktivitas kantin kamu.</p>
+        </div>
+        <span class="demo-label">Mode lokal</span>
+      </div>
+
+      <!-- Kartu statistik diisi oleh JavaScript -->
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>Total Pesanan</span>
+          <strong id="statOrders">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Pesanan Aktif</span>
+          <strong id="statActive">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Pesanan Selesai</span>
+          <strong id="statCompleted">0</strong>
+        </article>
+
+        <article class="stat-card">
+          <span>Omzet Pesanan Selesai</span>
+          <strong id="statRevenue">Rp0</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= PESANAN ================= -->
+    <section id="orders" class="seller-section">
+      <div class="section-heading">
+        <div>
+          <h2>Pesanan Masuk</h2>
+          <p>Periksa pesanan dan perbarui statusnya.</p>
+        </div>
+      </div>
+
+      <!-- Pencarian pesanan berdasarkan nomor atau nama -->
+      <label for="orderSearch">Cari pesanan</label>
+      <input
+        id="orderSearch"
+        class="seller-input"
+        type="search"
+        placeholder="Nomor pesanan atau nama pembeli..."
+      >
+
+      <!-- Filter berdasarkan status -->
+      <label for="statusFilter">Filter status</label>
+      <select id="statusFilter" class="seller-input">
+        <option value="Semua">Semua status</option>
+        <option value="Menunggu">Menunggu</option>
+        <option value="Diproses">Diproses</option>
+        <option value="Siap Diambil">Siap Diambil</option>
+        <option value="Selesai">Selesai</option>
+        <option value="Dibatalkan">Dibatalkan</option>
+      </select>
+
+      <!-- Kartu pesanan dibuat melalui JavaScript -->
+      <div id="ordersList" class="orders-list"></div>
+      <p id="ordersMessage" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- ================= KELOLA MENU ================= -->
+    <section id="products" class="seller-section">
+      <div class="section-heading">
+        <div>
+          <h2>Kelola Menu</h2>
+          <p>Tambahkan menu dan atur harga serta ketersediaannya.</p>
+        </div>
+      </div>
+
+      <!-- Form tambah menu baru -->
+      <form id="productForm" class="product-form">
+        <div>
+          <label for="productName">Nama menu</label>
+          <input
+            id="productName"
+            class="seller-input"
+            type="text"
+            maxlength="60"
+            placeholder="Contoh: Nasi Pecel"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="productPrice">Harga (Rupiah)</label>
+          <input
+            id="productPrice"
+            class="seller-input"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="10000"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="productImage">URL gambar (opsional)</label>
+          <input
+            id="productImage"
+            class="seller-input"
+            type="url"
+            placeholder="https://contoh.com/gambar.jpg"
+          >
+        </div>
+
+        <button type="submit" class="seller-button">
+          + Tambahkan Menu
+        </button>
+      </form>
+
+      <!-- Daftar menu yang dikelola penjual -->
+      <div id="productsList" class="products-list"></div>
+      <p id="productsMessage" role="status" aria-live="polite"></p>
+    </section>
+
+  </main>
+
+  <footer class="seller-footer">
+    <p>KantinQ &copy; 2026 · Dashboard Penjual</p>
+  </footer>
+
+  <!-- Memuat logika dashboard penjual -->
+  <script src="penjual.js"></script>
+</body>
+</html>
+
