@@ -1,1 +1,80 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Menentukan karakter agar teks Indonesia tampil dengan benar -->
+  <meta charset="UTF-8">
+
+  <!-- Membuat tampilan menyesuaikan ukuran layar HP dan laptop -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Judul yang tampil pada tab browser -->
+  <title>KantinQ - Kantin Digital Sekolah</title>
+
+  <!-- Menghubungkan file desain CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Bagian kepala website -->
+  <header class="header">
+    <div class="header-content">
+      <h1>Kantin<span>Q</span></h1>
+      <p>Kantin Digital Sekolah</p>
+      <p>Temukan menu favoritmu dengan mudah!</p>
+    </div>
+  </header>
+
+  <!-- Konten utama website -->
+  <main class="container">
+
+    <!-- Bagian pencarian makanan -->
+    <section class="search-section">
+      <h2>Menu Kantin</h2>
+      <p>Pilih makanan dan minuman favoritmu.</p>
+
+      <!-- Input ini digunakan untuk mencari nama menu -->
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Cari bakso, mie ayam, es teh..."
+        aria-label="Cari menu makanan dan minuman"
+      >
+    </section>
+
+    <!-- JavaScript akan memasukkan kartu menu ke bagian ini -->
+    <section id="menuList" class="menu-list"></section>
+
+    <!-- Bagian keranjang belanja -->
+    <section class="cart-section">
+      <h2>🛒 Keranjang Belanja</h2>
+
+      <!-- Daftar menu yang dipilih akan ditampilkan di sini -->
+      <div id="cartList"></div>
+
+      <!-- Ringkasan harga belanja -->
+      <div class="cart-summary">
+        <span>Total Pembayaran</span>
+        <strong id="total">Rp0</strong>
+      </div>
+
+      <!-- Tombol untuk menyelesaikan simulasi pemesanan -->
+      <button id="checkoutBtn" class="checkout-button">
+        Pesan Sekarang
+      </button>
+
+      <!-- Pesan informasi, misalnya saat menu ditambahkan -->
+      <p id="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <!-- Bagian bawah website -->
+  <footer class="footer">
+    <p>&copy; 2026 KantinQ - Kantin Digital Sekolah</p>
+  </footer>
+
+  <!-- Memuat kode JavaScript setelah elemen HTML tersedia -->
+  <script src="script.js"></script>
+</body>
+</html>
+
