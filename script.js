@@ -1,581 +1,634 @@
 
-// =====================================================
-// KANTINQ - SISTEM PEMBELI
-// Data awal dapat kamu ubah sesuai menu kantin sekolah.
-// =====================================================
+// ======================================================
+// 1. DATA AWAL DAN PENYIMPANAN BROWSER
+// ======================================================
 
-const DEFAULT_MENUS = [
+const MENU_KEY = "kantinq_menus";
+const ORDER_KEY = "kantinq_orders";
+const SETTINGS_KEY = "kantinq_settings";
+const CART_KEY = "kantinq_cart";
+
+const defaultMenus = [
   {
-    id: "m1", name: "Bakso", category: "Makanan Berat",
-    price: 10000, stock: 20, sold: 12,
-    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-    description: "Bakso hangat dengan kuah gurih."
+    id: "m1",
+    name: "Bakso Kuah",
+    category: "Makanan",
+    price: 12000,
+    stock: 20,
+    sold: 0,
+    description: "Bakso hangat dengan kuah gurih.",
+    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m2", name: "Mie Ayam", category: "Makanan Berat",
-    price: 12000, stock: 15, sold: 10,
-    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80",
-    description: "Mie ayam dengan topping pilihan."
+    id: "m2",
+    name: "Nasi Goreng",
+    category: "Makanan",
+    price: 15000,
+    stock: 20,
+    sold: 0,
+    description: "Nasi goreng lezat untuk mengisi energi.",
+    image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m3", name: "Nasi Goreng", category: "Makanan Berat",
-    price: 13000, stock: 12, sold: 8,
-    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80",
-    description: "Nasi goreng hangat dan lezat."
+    id: "m3",
+    name: "Mie Ayam",
+    category: "Makanan",
+    price: 12000,
+    stock: 15,
+    sold: 0,
+    description: "Mie ayam dengan topping gurih.",
+    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m4", name: "Roti Bakar", category: "Makanan Ringan",
-    price: 8000, stock: 10, sold: 6,
-    image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
-    description: "Roti panggang dengan topping manis."
+    id: "m4",
+    name: "Es Teh",
+    category: "Minuman",
+    price: 4000,
+    stock: 30,
+    sold: 0,
+    description: "Es teh manis yang menyegarkan.",
+    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m5", name: "Es Teh", category: "Minuman",
-    price: 4000, stock: 30, sold: 25,
-    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
-    description: "Teh segar dengan es."
+    id: "m5",
+    name: "Jus Jeruk",
+    category: "Minuman",
+    price: 7000,
+    stock: 20,
+    sold: 0,
+    description: "Minuman jeruk segar.",
+    image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m6", name: "Jus Jeruk", category: "Minuman",
-    price: 7000, stock: 12, sold: 9,
-    image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=800&q=80",
-    description: "Minuman jeruk yang menyegarkan."
+    id: "m6",
+    name: "Kentang Goreng",
+    category: "Camilan",
+    price: 8000,
+    stock: 20,
+    sold: 0,
+    description: "Kentang goreng renyah.",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m7", name: "Puding Cokelat", category: "Dessert",
-    price: 6000, stock: 8, sold: 5,
-    image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80",
-    description: "Puding lembut dengan rasa cokelat."
+    id: "m7",
+    name: "Puding Cokelat",
+    category: "Dessert",
+    price: 6000,
+    stock: 15,
+    sold: 0,
+    description: "Puding cokelat dengan saus dan topping cokelat.",
+    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    id: "m8",
+    name: "Roti Cokelat",
+    category: "Camilan",
+    price: 5000,
+    stock: 18,
+    sold: 0,
+    description: "Roti manis dengan isian cokelat.",
+    image: "https://images.unsplash.com/photo-1608198093002-ad4e005484df?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
-const KEYS = {
-  menus: "kantinQSellerProducts",
-  orders: "kantinQOrders",
-  ratings: "kantinQRatings",
-  settings: "kantinQSettings",
-  cart: "kantinQCart",
-  promo: "kantinQPromo"
-};
-
-const $ = (id) => document.getElementById(id);
-const rupiah = (number) =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency", currency: "IDR", maximumFractionDigits: 0
-  }).format(number || 0);
-
-function readData(key, fallback) {
+// Mengambil data dari localStorage atau membuat data awal.
+function readJSON(key, fallback) {
   try {
-    const value = JSON.parse(localStorage.getItem(key));
-    return value ?? fallback;
-  } catch {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch (error) {
+    console.error("Gagal membaca data:", error);
     return fallback;
   }
 }
 
-function saveData(key, value) {
+function saveJSON(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// Data menu dan pesanan
-let menus = readData(KEYS.menus, DEFAULT_MENUS);
-let orders = readData(KEYS.orders, []);
-let ratings = readData(KEYS.ratings, []);
-let cart = readData(KEYS.cart, []);
-let promoCode = readData(KEYS.promo, "");
-let lastReceiptId = null;
-
-if (!Array.isArray(menus) || menus.length === 0) {
-  menus = DEFAULT_MENUS;
-  saveData(KEYS.menus, menus);
+if (!localStorage.getItem(MENU_KEY)) {
+  saveJSON(MENU_KEY, defaultMenus);
+}
+if (!localStorage.getItem(ORDER_KEY)) {
+  saveJSON(ORDER_KEY, []);
+}
+if (!localStorage.getItem(SETTINGS_KEY)) {
+  saveJSON(SETTINGS_KEY, { open: true, prepMinutes: 10 });
 }
 
-// Memastikan data awal tersedia untuk halaman penjual
-if (localStorage.getItem(KEYS.menus) === null) {
-  saveData(KEYS.menus, menus);
-}
+let menus = readJSON(MENU_KEY, defaultMenus);
+let orders = readJSON(ORDER_KEY, []);
+let cart = readJSON(CART_KEY, []);
+let promoApplied = false;
+let activeCallOrderId = null;
 
-const DEFAULT_SETTINGS = {
-  isOpen: true,
-  openingTime: "07:00",
-  closingTime: "15:00",
-  prepMinutes: 10
-};
+// ======================================================
+// 2. FUNGSI BANTUAN
+// ======================================================
 
-let settings = readData(KEYS.settings, DEFAULT_SETTINGS);
+const $ = (id) => document.getElementById(id);
 
-function showToast(message) {
-  const toast = $("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2800);
+function rupiah(number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(number);
 }
 
 function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[char]);
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
 }
 
 function getStock(menu) {
   return Math.max(0, Number(menu.stock) || 0);
 }
 
-function getDiscount(subtotal) {
-  // Promo contoh: HEMAT2000 untuk potongan Rp2.000,
-  // minimal pembelian Rp20.000.
-  if (promoCode.toUpperCase() === "HEMAT2000" && subtotal >= 20000) {
-    return Math.min(2000, subtotal);
-  }
-  return 0;
+function showToast(message) {
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
-function getSubtotal() {
-  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+function refreshData() {
+  menus = readJSON(MENU_KEY, defaultMenus);
+  orders = readJSON(ORDER_KEY, []);
+  cart = readJSON(CART_KEY, []);
 }
 
-function getTotal() {
-  const subtotal = getSubtotal();
-  return subtotal - getDiscount(subtotal);
-}
-
-// Jam operasional sederhana berdasarkan waktu perangkat.
-function updateOpenStatus() {
-  const now = new Date();
-  const current = now.getHours() * 60 + now.getMinutes();
-  const [oh, om] = settings.openingTime.split(":").map(Number);
-  const [ch, cm] = settings.closingTime.split(":").map(Number);
-  const openAt = oh * 60 + om;
-  const closeAt = ch * 60 + cm;
-  const inHours = openAt <= closeAt
-    ? current >= openAt && current < closeAt
-    : current >= openAt || current < closeAt;
-  const open = settings.isOpen && inHours;
-
-  $("openStatus").textContent = open
-    ? `🟢 Buka · ${settings.openingTime}–${settings.closingTime}`
-    : `🔴 Tutup · ${settings.openingTime}–${settings.closingTime}`;
-  $("openStatus").dataset.open = String(open);
-}
+// ======================================================
+// 3. MENAMPILKAN MENU
+// ======================================================
 
 function renderMenus() {
-  const search = $("searchInput").value.trim().toLowerCase();
+  const query = $("searchInput").value.trim().toLowerCase();
   const category = $("categoryFilter").value;
-  const sort = $("sortFilter").value;
 
-  let list = menus.filter(menu => {
-    const available = menu.available !== false && getStock(menu) > 0;
-    const matchesSearch = `${menu.name} ${menu.description || ""}`
-      .toLowerCase().includes(search);
-    const matchesCategory = category === "Semua" || menu.category === category;
-    return matchesSearch && matchesCategory && (available || search !== "");
+  const filteredMenus = menus.filter((menu) => {
+    const matchesText =
+      menu.name.toLowerCase().includes(query) ||
+      menu.description.toLowerCase().includes(query);
+
+    const matchesCategory =
+      category === "Semua" || menu.category === category;
+
+    return matchesText && matchesCategory;
   });
 
-  if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
-  if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
-  if (sort === "popular") list.sort((a, b) => (b.sold || 0) - (a.sold || 0));
-
-  $("menuCount").textContent = `${list.length} menu`;
-  $("emptyMenus").classList.toggle("hidden", list.length > 0);
-
-  $("menuGrid").innerHTML = list.map(menu => {
+  $("menuList").innerHTML = filteredMenus.map((menu) => {
     const stock = getStock(menu);
-    const disabled = stock <= 0 || menu.available === false;
+    const image = escapeHTML(menu.image || "");
     return `
       <article class="menu-card">
-        <img class="menu-photo"
-          src="${escapeHTML(menu.image || "")}"
+        <img
+          src="${image}"
           alt="${escapeHTML(menu.name)}"
           loading="lazy"
-          onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Foto+Menu'">
+          onerror="this.onerror=null;this.src='https://placehold.co/800x500?text=Gambar+Menu';"
+        >
         <div class="menu-info">
-          <span class="tag">${escapeHTML(menu.category)}</span>
+          <span class="category-tag">${escapeHTML(menu.category)}</span>
           <h3>${escapeHTML(menu.name)}</h3>
-          <p>${escapeHTML(menu.description || "Menu kantin pilihan.")}</p>
-          <div class="menu-meta">
-            <span class="price">${rupiah(menu.price)}</span>
-            <span class="${disabled ? "sold-out" : "muted"}">
-              ${disabled ? "Habis" : `Stok ${stock}`}
-            </span>
+          <p>${escapeHTML(menu.description)}</p>
+          <span class="stock-text">Stok tersedia: ${stock}</span>
+          <div class="menu-bottom">
+            <span class="menu-price">${rupiah(menu.price)}</span>
+            <button
+              class="button button-primary"
+              data-add="${escapeHTML(menu.id)}"
+              ${stock < 1 ? "disabled" : ""}
+              type="button"
+            >${stock < 1 ? "Habis" : "+ Keranjang"}</button>
           </div>
-          <p>⭐ ${Number(menu.rating || 0).toFixed(1)} · Terjual ${menu.sold || 0}</p>
-          <button class="button full" data-add="${escapeHTML(menu.id)}"
-            ${disabled ? "disabled" : ""}>Tambah ke keranjang</button>
         </div>
-      </article>`;
+      </article>
+    `;
   }).join("");
+
+  $("emptyMenu").classList.toggle("hidden", filteredMenus.length > 0);
+}
+
+// ======================================================
+// 4. KERANJANG DAN PERHITUNGAN HARGA
+// ======================================================
+
+function getCartDetails() {
+  const details = cart.map((item) => {
+    const menu = menus.find((entry) => entry.id === item.id);
+    if (!menu) return null;
+
+    const quantity = Math.max(0, Number(item.quantity) || 0);
+    return {
+      ...menu,
+      quantity,
+      lineTotal: menu.price * quantity
+    };
+  }).filter(Boolean);
+
+  const subtotal = details.reduce((sum, item) => sum + item.lineTotal, 0);
+  const discount = promoApplied && subtotal >= 20000 ? 2000 : 0;
+
+  return {
+    details,
+    subtotal,
+    discount,
+    total: Math.max(0, subtotal - discount)
+  };
+}
+
+function saveCart() {
+  saveJSON(CART_KEY, cart);
 }
 
 function renderCart() {
-  $("cartCount").textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+  // Hapus item keranjang jika menu sudah tidak ada.
+  cart = cart.filter((item) => menus.some((menu) => menu.id === item.id));
+  saveCart();
 
-  if (cart.length === 0) {
-    $("cartItems").innerHTML = '<p class="empty">Keranjang masih kosong.</p>';
-  } else {
-    $("cartItems").innerHTML = cart.map(item => `
-      <div class="cart-line">
-        <div>
-          <strong>${escapeHTML(item.name)}</strong>
-          <div class="muted">${rupiah(item.price)} × ${item.quantity}</div>
-          <div class="quantity-controls">
-            <button data-change="${escapeHTML(item.id)}" data-delta="-1">−</button>
-            <span>${item.quantity}</span>
-            <button data-change="${escapeHTML(item.id)}" data-delta="1">+</button>
-            <button class="icon-button" data-remove="${escapeHTML(item.id)}" aria-label="Hapus">🗑️</button>
-          </div>
-        </div>
-        <strong>${rupiah(item.price * item.quantity)}</strong>
-      </div>`).join("");
-  }
+  const { details, subtotal, discount, total } = getCartDetails();
 
-  const subtotal = getSubtotal();
-  $("cartSubtotal").textContent = rupiah(subtotal);
-  $("cartDiscount").textContent = rupiah(getDiscount(subtotal));
-  $("cartTotal").textContent = rupiah(getTotal());
-  $("checkoutButton").disabled = cart.length === 0;
-  saveData(KEYS.cart, cart);
+  $("cartList").innerHTML = details.map((item) => `
+    <div class="cart-row">
+      <div>
+        <div class="cart-name">${escapeHTML(item.name)}</div>
+        <div class="cart-price">${rupiah(item.price)} per item</div>
+      </div>
+      <strong>${rupiah(item.lineTotal)}</strong>
+      <div class="quantity-control">
+        <button type="button" data-minus="${escapeHTML(item.id)}" aria-label="Kurangi jumlah">−</button>
+        <span>${item.quantity}</span>
+        <button type="button" data-plus="${escapeHTML(item.id)}" aria-label="Tambah jumlah">+</button>
+        <button class="remove-button" type="button" data-remove="${escapeHTML(item.id)}">Hapus</button>
+      </div>
+    </div>
+  `).join("");
+
+  $("emptyCart").classList.toggle("hidden", details.length > 0);
+  $("cartCount").textContent =
+    `${details.reduce((sum, item) => sum + item.quantity, 0)} item`;
+  $("subtotal").textContent = rupiah(subtotal);
+  $("discount").textContent = rupiah(discount);
+  $("total").textContent = rupiah(total);
+  $("checkoutButton").disabled = details.length === 0;
 }
 
 function addToCart(id) {
-  const menu = menus.find(item => item.id === id);
-  if (!menu || getStock(menu) <= 0 || menu.available === false) {
+  const menu = menus.find((item) => item.id === id);
+  if (!menu || getStock(menu) < 1) {
     showToast("Menu sedang habis.");
     return;
   }
 
-  const existing = cart.find(item => item.id === id);
-  if (existing) {
-    if (existing.quantity >= getStock(menu)) {
-      showToast("Jumlah pesanan melebihi stok.");
-      return;
-    }
-    existing.quantity++;
-  } else {
-    cart.push({
-      id: menu.id, name: menu.name,
-      price: Number(menu.price), quantity: 1
-    });
-  }
+  const item = cart.find((entry) => entry.id === id);
+  const currentQuantity = item ? item.quantity : 0;
 
-  renderCart();
-  showToast(`${menu.name} ditambahkan.`);
-}
-
-function changeQuantity(id, delta) {
-  const item = cart.find(entry => entry.id === id);
-  const menu = menus.find(entry => entry.id === id);
-  if (!item) return;
-
-  const next = item.quantity + delta;
-  if (next <= 0) {
-    cart = cart.filter(entry => entry.id !== id);
-  } else if (!menu || next > getStock(menu)) {
-    showToast("Jumlah melebihi stok.");
+  if (currentQuantity >= getStock(menu)) {
+    showToast("Jumlah pesanan melebihi stok.");
     return;
+  }
+
+  if (item) {
+    item.quantity += 1;
   } else {
-    item.quantity = next;
+    cart.push({ id, quantity: 1 });
+  }
+
+  saveCart();
+  renderCart();
+  showToast(`${menu.name} ditambahkan ke keranjang.`);
+}
+
+function changeQuantity(id, amount) {
+  const item = cart.find((entry) => entry.id === id);
+  const menu = menus.find((entry) => entry.id === id);
+  if (!item || !menu) return;
+
+  const newQuantity = item.quantity + amount;
+
+  if (newQuantity <= 0) {
+    cart = cart.filter((entry) => entry.id !== id);
+  } else if (newQuantity <= getStock(menu)) {
+    item.quantity = newQuantity;
+  } else {
+    showToast("Jumlah melebihi stok yang tersedia.");
+  }
+
+  saveCart();
+  renderCart();
+}
+
+// ======================================================
+// 5. PROMO
+// ======================================================
+
+$("applyPromoButton").addEventListener("click", () => {
+  const code = $("promoInput").value.trim().toUpperCase();
+  const subtotal = getCartDetails().subtotal;
+
+  if (code !== "HEMAT2000") {
+    promoApplied = false;
+    $("promoMessage").textContent = "Kode promo tidak valid.";
+  } else if (subtotal < 20000) {
+    promoApplied = false;
+    $("promoMessage").textContent = "Minimal belanja Rp20.000 untuk memakai promo.";
+  } else {
+    promoApplied = true;
+    $("promoMessage").textContent = "Promo berhasil! Diskon Rp2.000.";
   }
 
   renderCart();
-}
+});
+
+// ======================================================
+// 6. CHECKOUT / MEMBUAT PESANAN
+// ======================================================
 
 function makeOrderNumber() {
-  const next = Number(localStorage.getItem("kantinQLastQueue") || "0") + 1;
-  localStorage.setItem("kantinQLastQueue", String(next));
-  return `KQ-${String(next).padStart(3, "0")}`;
+  return "KQ-" + Date.now().toString().slice(-8);
 }
 
-function createOrder(event) {
-  event.preventDefault();
-  updateOpenStatus();
+$("checkoutButton").addEventListener("click", () => {
+  refreshData();
 
-  if ($("openStatus").dataset.open !== "true") {
-    showToast("Kantin sedang tutup.");
+  const name = $("customerName").value.trim();
+  const customerClass = $("customerClass").value.trim();
+  const { details, subtotal, discount, total } = getCartDetails();
+
+  if (!name) {
+    showToast("Masukkan nama pelanggan terlebih dahulu.");
+    $("customerName").focus();
     return;
   }
-  if (!cart.length) {
+
+  if (details.length === 0) {
     showToast("Keranjang masih kosong.");
     return;
   }
 
-  // Validasi stok sekali lagi sebelum checkout.
-  for (const item of cart) {
-    const menu = menus.find(entry => entry.id === item.id);
-    if (!menu || menu.available === false || getStock(menu) < item.quantity) {
-      showToast(`Stok ${item.name} tidak mencukupi. Muat ulang menu.`);
+  // Periksa stok terbaru sebelum menyimpan pesanan.
+  for (const item of details) {
+    const currentMenu = menus.find((menu) => menu.id === item.id);
+    if (!currentMenu || item.quantity > getStock(currentMenu)) {
+      showToast(`Stok ${item.name} tidak mencukupi. Periksa keranjang.`);
       renderMenus();
+      renderCart();
       return;
     }
   }
 
-  const customer = $("customerName").value.trim();
-  if (!customer) {
-    showToast("Isi nama pembeli terlebih dahulu.");
+  const settings = readJSON(SETTINGS_KEY, { open: true, prepMinutes: 10 });
+  if (settings.open === false) {
+    showToast("Kantin sedang tutup dan belum menerima pesanan.");
     return;
   }
 
-  const subtotal = getSubtotal();
-  const discount = getDiscount(subtotal);
-  const queue = makeOrderNumber();
-  const order = {
-    id: `KQ-${Date.now()}`,
-    queue,
-    customer,
-    note: $("orderNote").value.trim(),
-    items: cart.map(item => ({ ...item })),
+  const newOrder = {
+    id: makeOrderNumber(),
+    name,
+    customerClass,
+    items: details.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity
+    })),
     subtotal,
     discount,
-    total: subtotal - discount,
+    total,
     status: "Menunggu",
     createdAt: new Date().toISOString(),
     prepMinutes: Number(settings.prepMinutes) || 10
   };
 
-  // Mengurangi stok lokal saat pesanan dibuat.
-  // Untuk banyak perangkat, stok wajib divalidasi di backend.
-  menus = menus.map(menu => {
-    const ordered = cart.find(item => item.id === menu.id);
-    return ordered
-      ? { ...menu, stock: getStock(menu) - ordered.quantity }
+  // Kurangi stok saat pesanan dibuat.
+  menus = menus.map((menu) => {
+    const orderedItem = details.find((item) => item.id === menu.id);
+    return orderedItem
+      ? { ...menu, stock: getStock(menu) - orderedItem.quantity }
       : menu;
   });
 
-  orders.unshift(order);
-  saveData(KEYS.orders, orders);
-  saveData(KEYS.menus, menus);
+  orders = readJSON(ORDER_KEY, []);
+  orders.unshift(newOrder);
+
+  saveJSON(MENU_KEY, menus);
+  saveJSON(ORDER_KEY, orders);
 
   cart = [];
-  promoCode = "";
-  saveData(KEYS.promo, promoCode);
+  promoApplied = false;
+  saveCart();
   $("promoInput").value = "";
   $("promoMessage").textContent = "";
-  $("orderNote").value = "";
-  saveData(KEYS.cart, cart);
+  $("customerName").value = "";
+  $("customerClass").value = "";
 
-  renderMenus();
-  renderCart();
-  renderOrders();
-  renderRatingOptions();
+  renderAll();
+  showToast(`Pesanan berhasil dibuat! Nomor: ${newOrder.id}`);
+  $("pesanan").scrollIntoView({ behavior: "smooth" });
+});
 
-  $("cartDialog").close();
-  showReceipt(order);
-  showToast(`Pesanan ${queue} berhasil dibuat.`);
+// ======================================================
+// 7. PESANAN AKTIF DAN RIWAYAT
+// ======================================================
 
-  // Notifikasi hanya tampil pada browser yang sedang terbuka.
-  if ("Notification" in window && Notification.permission === "granted") {
-    new Notification("Pesanan KantinQ dibuat", {
-      body: `Nomor antrean ${queue}`
-    });
-  }
+function statusClass(status) {
+  if (status === "Siap Diambil") return "status-siap";
+  if (status === "Selesai") return "status-selesai";
+  if (status === "Ditolak") return "status-ditolak";
+  return "";
 }
 
-function showReceipt(order) {
-  lastReceiptId = order.id;
-  $("receiptContent").innerHTML = `
-    <div class="receipt">
-      <h2>KantinQ</h2>
-      <p>Struk pesanan kantin digital</p>
-      <hr>
-      <div class="receipt-row"><span>Nomor antrean</span><strong>${escapeHTML(order.queue)}</strong></div>
-      <div class="receipt-row"><span>Pembeli</span><strong>${escapeHTML(order.customer)}</strong></div>
-      <div class="receipt-row"><span>Waktu</span><span>${new Date(order.createdAt).toLocaleString("id-ID")}</span></div>
-      <hr>
-      ${order.items.map(item => `
-        <div class="receipt-row">
-          <span>${escapeHTML(item.name)} × ${item.quantity}</span>
-          <strong>${rupiah(item.price * item.quantity)}</strong>
-        </div>`).join("")}
-      <hr>
-      <div class="receipt-row"><span>Subtotal</span><span>${rupiah(order.subtotal)}</span></div>
-      <div class="receipt-row"><span>Diskon</span><span>−${rupiah(order.discount)}</span></div>
-      <div class="receipt-row"><strong>Total</strong><strong>${rupiah(order.total)}</strong></div>
-      <p>Status: <strong>${escapeHTML(order.status)}</strong></p>
-      ${order.note ? `<p>Catatan: ${escapeHTML(order.note)}</p>` : ""}
-    </div>`;
-  $("receiptDialog").showModal();
+function orderCardHTML(order) {
+  const items = (order.items || []).map((item) =>
+    `<li>${escapeHTML(item.name)} × ${Number(item.quantity) || 0}</li>`
+  ).join("");
+
+  const date = new Date(order.createdAt).toLocaleString("id-ID");
+
+  return `
+    <article class="order-card">
+      <h3>Pesanan ${escapeHTML(order.id)}</h3>
+      <p><strong>${escapeHTML(order.name)}</strong>
+        ${order.customerClass ? `· ${escapeHTML(order.customerClass)}` : ""}
+      </p>
+      <p class="small">${date}</p>
+      <span class="status-pill ${statusClass(order.status)}">${escapeHTML(order.status)}</span>
+      <ul>${items}</ul>
+      <div class="price-line">
+        <span>Total</span><strong>${rupiah(order.total)}</strong>
+      </div>
+      ${order.status === "Siap Diambil"
+        ? `<p><strong>📣 Pesananmu siap diambil di kantin!</strong></p>`
+        : ""}
+      ${order.status === "Selesai"
+        ? `<p class="small">Pesanan telah selesai.</p>`
+        : ""}
+    </article>
+  `;
 }
 
 function renderOrders() {
-  orders = readData(KEYS.orders, []);
-  $("myOrders").innerHTML = orders.length ? orders.map(order => `
-    <article class="order-card">
-      <div class="order-card-top">
-        <strong>${escapeHTML(order.queue || order.id)}</strong>
-        <span class="status-pill-small">${escapeHTML(order.status)}</span>
-      </div>
-      <p>${new Date(order.createdAt).toLocaleString("id-ID")}</p>
-      <p>${order.items.map(item => `${escapeHTML(item.name)} × ${item.quantity}`).join(", ")}</p>
-      <p><strong>Total ${rupiah(order.total)}</strong></p>
-      <p class="muted">${getStatusMessage(order.status, order.prepMinutes)}</p>
-      <button class="button secondary" data-receipt="${escapeHTML(order.id)}">Lihat struk</button>
-    </article>`).join("") : '<p class="empty">Belum ada pesanan di perangkat ini.</p>';
+  orders = readJSON(ORDER_KEY, []);
+
+  // Pesanan selesai atau ditolak tidak lagi ditampilkan di daftar aktif.
+  const activeOrders = orders.filter(
+    (order) => !["Selesai", "Ditolak"].includes(order.status)
+  );
+
+  const historyOrders = orders.filter(
+    (order) => ["Selesai", "Ditolak"].includes(order.status)
+  );
+
+  $("myOrders").innerHTML = activeOrders.map(orderCardHTML).join("");
+  $("orderHistory").innerHTML = historyOrders.map(orderCardHTML).join("");
+
+  $("emptyOrders").classList.toggle("hidden", activeOrders.length > 0);
+  $("emptyHistory").classList.toggle("hidden", historyOrders.length > 0);
 }
 
-function getStatusMessage(status, minutes) {
-  const messages = {
-    "Menunggu": "Pesanan menunggu konfirmasi penjual.",
-    "Diproses": `Pesanan sedang dibuat. Perkiraan ${minutes || 10} menit.`,
-    "Siap Diambil": "Silakan ambil pesanan di kantin.",
-    "Selesai": "Pesanan sudah selesai. Terima kasih!",
-    "Ditolak": "Pesanan ditolak oleh penjual. Hubungi penjual untuk tindak lanjut."
-  };
-  return messages[status] || "Status pesanan diperbarui.";
+// ======================================================
+// 8. PEMANGGILAN PESANAN SIAP
+// ======================================================
+
+function showCustomerCall(order) {
+  activeCallOrderId = order.id;
+  $("customerCallTitle").textContent = `📣 Pesanan ${order.id} sudah siap!`;
+  $("customerCallMessage").textContent =
+    `Perhatian, ${order.name}${order.customerClass ? ` dari kelas ${order.customerClass}` : ""}. Pesananmu sudah siap diambil di kantin.`;
+  $("customerCall").classList.remove("hidden");
+  $("noCustomerCall").classList.add("hidden");
+
+  // Notifikasi browser hanya bekerja jika didukung dan telah diizinkan.
+  if ("Notification" in window && Notification.permission === "granted") {
+    try {
+      new Notification("KantinQ — Pesanan Siap", {
+        body: `Pesanan ${order.id} atas nama ${order.name} siap diambil.`
+      });
+    } catch (error) {
+      console.log("Notifikasi browser tidak dapat ditampilkan.");
+    }
+  }
 }
 
-function renderRatingOptions() {
-  const completed = orders.filter(order => order.status === "Selesai");
-  const previous = $("ratingOrder").value;
-  $("ratingOrder").innerHTML = '<option value="">Pilih pesanan selesai</option>' +
-    completed.map(order => {
-      const alreadyRated = ratings.some(rating => rating.orderId === order.id);
-      return `<option value="${escapeHTML(order.id)}" ${alreadyRated ? "disabled" : ""}>
-        ${escapeHTML(order.queue || order.id)}${alreadyRated ? " (sudah dinilai)" : ""}
-      </option>`;
-    }).join("");
-  if (completed.some(order => order.id === previous)) $("ratingOrder").value = previous;
+$("dismissCallButton").addEventListener("click", () => {
+  $("customerCall").classList.add("hidden");
+  $("noCustomerCall").classList.remove("hidden");
+});
+
+function checkReadyOrders() {
+  const latestOrders = readJSON(ORDER_KEY, []);
+  const previousOrders = orders;
+  orders = latestOrders;
+
+  // Hanya panggil otomatis ketika status berubah menjadi siap.
+  for (const order of latestOrders) {
+    const previousOrder = previousOrders.find((item) => item.id === order.id);
+
+    if (
+      order.status === "Siap Diambil" &&
+      previousOrder &&
+      previousOrder.status !== "Siap Diambil"
+    ) {
+      showCustomerCall(order);
+    }
+  }
+
+  // Menampilkan pemanggilan jika halaman dibuka ketika pesanan sudah siap.
+  if (activeCallOrderId) {
+    const currentCall = latestOrders.find((item) => item.id === activeCallOrderId);
+    if (!currentCall || currentCall.status !== "Siap Diambil") {
+      activeCallOrderId = null;
+      $("customerCall").classList.add("hidden");
+      $("noCustomerCall").classList.remove("hidden");
+    }
+  } else {
+    const readyOrder = latestOrders.find((item) => item.status === "Siap Diambil");
+    if (readyOrder) showCustomerCall(readyOrder);
+  }
+
+  renderOrders();
 }
 
-function renderRatings() {
-  ratings = readData(KEYS.ratings, []);
-  $("ratingsList").innerHTML = ratings.length ? ratings.slice(0, 10).map(rating => `
-    <div class="rating-item">
-      <strong>${"★".repeat(rating.stars)}${"☆".repeat(5 - rating.stars)}</strong>
-      <p>${escapeHTML(rating.comment || "Tanpa komentar")}</p>
-      <small class="muted">${new Date(rating.createdAt).toLocaleDateString("id-ID")}</small>
-    </div>`).join("") : '<p class="muted">Belum ada ulasan.</p>';
+// Meminta izin notifikasi setelah pelanggan menekan tombol.
+$("customerCall").addEventListener("click", async (event) => {
+  if (event.target.id !== "dismissCallButton" &&
+      "Notification" in window &&
+      Notification.permission === "default") {
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.log("Izin notifikasi tidak tersedia.");
+    }
+  }
+});
+
+// ======================================================
+// 9. MODE GELAP
+// ======================================================
+
+$("themeButton").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  $("themeButton").textContent = isDark ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+  localStorage.setItem("kantinq_dark", isDark ? "yes" : "no");
+});
+
+if (localStorage.getItem("kantinq_dark") === "yes") {
+  document.body.classList.add("dark");
+  $("themeButton").textContent = "☀️ Mode Terang";
 }
 
-$("menuGrid").addEventListener("click", event => {
+// ======================================================
+// 10. EVENT TOMBOL MENU DAN KERANJANG
+// ======================================================
+
+$("menuList").addEventListener("click", (event) => {
   const button = event.target.closest("[data-add]");
   if (button) addToCart(button.dataset.add);
 });
 
-$("cartItems").addEventListener("click", event => {
-  const change = event.target.closest("[data-change]");
-  const remove = event.target.closest("[data-remove]");
+$("cartList").addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
 
-  if (change) changeQuantity(change.dataset.change, Number(change.dataset.delta));
-  if (remove) {
-    cart = cart.filter(item => item.id !== remove.dataset.remove);
+  if (button.dataset.plus) changeQuantity(button.dataset.plus, 1);
+  if (button.dataset.minus) changeQuantity(button.dataset.minus, -1);
+
+  if (button.dataset.remove) {
+    cart = cart.filter((item) => item.id !== button.dataset.remove);
+    saveCart();
     renderCart();
   }
 });
 
-$("cartButton").addEventListener("click", () => $("cartDialog").showModal());
-$("checkoutForm").addEventListener("submit", createOrder);
 $("searchInput").addEventListener("input", renderMenus);
 $("categoryFilter").addEventListener("change", renderMenus);
-$("sortFilter").addEventListener("change", renderMenus);
-$("refreshOrdersButton").addEventListener("click", () => {
-  menus = readData(KEYS.menus, DEFAULT_MENUS);
-  orders = readData(KEYS.orders, []);
-  ratings = readData(KEYS.ratings, []);
-  settings = readData(KEYS.settings, DEFAULT_SETTINGS);
-  renderMenus();
-  renderOrders();
-  renderRatingOptions();
-  renderRatings();
-  updateOpenStatus();
-  showToast("Data lokal dimuat ulang.");
-});
 
-$("checkPromoButton").addEventListener("click", () => {
-  const code = $("promoInput").value.trim().toUpperCase();
-  if (code === "HEMAT2000") {
-    promoCode = code;
-    saveData(KEYS.promo, promoCode);
-    $("promoMessage").textContent = "Promo aktif: diskon Rp2.000 untuk belanja minimal Rp20.000.";
-    showToast("Promo berhasil digunakan.");
-  } else {
-    promoCode = "";
-    saveData(KEYS.promo, promoCode);
-    $("promoMessage").textContent = "Kode promo tidak valid.";
-  }
-  renderCart();
-});
-
-$("myOrders").addEventListener("click", event => {
-  const button = event.target.closest("[data-receipt]");
-  if (!button) return;
-  const order = orders.find(item => item.id === button.dataset.receipt);
-  if (order) showReceipt(order);
-});
-
-$("printReceiptButton").addEventListener("click", () => window.print());
-
-$("ratingForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const orderId = $("ratingOrder").value;
-  const order = orders.find(item => item.id === orderId);
-  if (!order || order.status !== "Selesai") {
-    showToast("Rating hanya dapat diberikan untuk pesanan selesai.");
-    return;
-  }
-  if (ratings.some(rating => rating.orderId === orderId)) {
-    showToast("Pesanan ini sudah diberi rating.");
-    return;
-  }
-
-  ratings.unshift({
-    id: `R-${Date.now()}`,
-    orderId,
-    stars: Number($("ratingStars").value),
-    comment: $("ratingComment").value.trim(),
-    createdAt: new Date().toISOString()
-  });
-  saveData(KEYS.ratings, ratings);
-  $("ratingComment").value = "";
-  renderRatingOptions();
-  renderRatings();
-  showToast("Terima kasih atas rating kamu!");
-});
-
-$("themeButton").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("kantinQTheme", document.body.classList.contains("dark") ? "dark" : "light");
-});
-
-function refreshOnStorageChange(event) {
-  if (!event.key || Object.values(KEYS).includes(event.key)) {
-    menus = readData(KEYS.menus, DEFAULT_MENUS);
-    orders = readData(KEYS.orders, []);
-    ratings = readData(KEYS.ratings, []);
-    settings = readData(KEYS.settings, DEFAULT_SETTINGS);
-    renderMenus();
-    renderCart();
-    renderOrders();
-    renderRatingOptions();
-    renderRatings();
-    updateOpenStatus();
-  }
-}
-
-// Storage event membantu menyegarkan tab lain di browser/origin yang sama.
-window.addEventListener("storage", refreshOnStorageChange);
-
-function init() {
-  if (localStorage.getItem("kantinQTheme") === "dark") document.body.classList.add("dark");
-  $("year").textContent = new Date().getFullYear();
+function renderAll() {
+  refreshData();
   renderMenus();
   renderCart();
   renderOrders();
-  renderRatingOptions();
-  renderRatings();
-  updateOpenStatus();
-
-  // Meminta izin notifikasi setelah tindakan pengguna, bukan otomatis.
-  $("themeButton").addEventListener("contextmenu", event => {
-    event.preventDefault();
-    if ("Notification" in window) {
-      Notification.requestPermission().then(permission => {
-        showToast(permission === "granted"
-          ? "Notifikasi diizinkan."
-          : "Izin notifikasi tidak diberikan.");
-      });
-    }
-  });
 }
 
-init();
+renderAll();
+
+// Memperbarui tampilan saat halaman penjual mengubah data di browser yang sama.
+window.addEventListener("storage", (event) => {
+  if ([MENU_KEY, ORDER_KEY, SETTINGS_KEY].includes(event.key)) {
+    renderAll();
+    checkReadyOrders();
+  }
+});
+
+// Pemeriksaan berkala membantu halaman pelanggan melihat status terbaru
+// jika data berubah di tab lain pada browser yang sama.
+setInterval(checkReadyOrders, 3000);
