@@ -1,689 +1,370 @@
 
-/* =====================================================
-   1. PENYIMPANAN DATA KANTINQ
-   ===================================================== */
-
+// =====================================================
+// KANTINQ - SISTEM POV PENJUAL
 // Semua data disimpan di localStorage browser.
-// Browser dan perangkat berbeda tidak berbagi data otomatis.
+// =====================================================
 
-const ORDER_KEY = "kantinQOrders";
-const PRODUCT_KEY = "kantinQSellerProducts";
+const KEYS = {
+  menus: "kantinQSellerProducts",
+  orders: "kantinQOrders",
+  ratings: "kantinQRatings",
+  settings: "kantinQSettings"
+};
 
-const ORDER_STATUSES = [
-  "Menunggu",
-  "Diproses",
-  "Siap Diambil",
-  "Selesai",
-  "Dibatalkan"
+const DEFAULT_MENUS = [
+  { id:"m1", name:"Bakso", category:"Makanan Berat", price:10000, stock:20, sold:12, image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80", description:"Bakso hangat dengan kuah gurih." },
+  { id:"m2", name:"Mie Ayam", category:"Makanan Berat", price:12000, stock:15, sold:10, image:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80", description:"Mie ayam dengan topping pilihan." },
+  { id:"m3", name:"Nasi Goreng", category:"Makanan Berat", price:13000, stock:12, sold:8, image:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80", description:"Nasi goreng hangat." },
+  { id:"m4", name:"Roti Bakar", category:"Makanan Ringan", price:8000, stock:10, sold:6, image:"https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80", description:"Roti panggang manis." },
+  { id:"m5", name:"Es Teh", category:"Minuman", price:4000, stock:30, sold:25, image:"https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80", description:"Teh segar dengan es." },
+  { id:"m6", name:"Jus Jeruk", category:"Minuman", price:7000, stock:12, sold:9, image:"https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=800&q=80", description:"Jus jeruk menyegarkan." },
+  { id:"m7", name:"Puding Cokelat", category:"Dessert", price:6000, stock:8, sold:5, image:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80", description:"Puding lembut." }
 ];
 
-// Data menu awal untuk dashboard penjual.
-// Data awal ini hanya untuk fitur kelola menu penjual.
-const defaultProducts = [
-  {
-    id: 1,
-    name: "Bakso",
-    price: 10000,
-    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80",
-    available: true
-  },
-  {
-    id: 2,
-    name: "Mie Ayam",
-    price: 12000,
-    image: "",
-    available: true
-  },
-  {
-    id: 3,
-    name: "Nasi Goreng",
-    price: 15000,
-    image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=400&q=80",
-    available: true
-  },
-  {
-    id: 4,
-    name: "Es Teh",
-    price: 4000,
-    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=400&q=80",
-    available: true
-  },
-  {
-    id: 5,
-    name: "Jus Jeruk",
-    price: 7000,
-    image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=400&q=80",
-    available: true
-  },
-  {
-    id: 6,
-    name: "Roti Bakar",
-    price: 8000,
-    image: "",
-    available: true
-  }
-];
+const DEFAULT_SETTINGS = {
+  isOpen: true,
+  openingTime: "07:00",
+  closingTime: "15:00",
+  prepMinutes: 10
+};
 
-/* Membaca data dari localStorage secara aman. */
-function readStorage(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
+const $ = id => document.getElementById(id);
+const money = n => new Intl.NumberFormat("id-ID", {
+  style:"currency", currency:"IDR", maximumFractionDigits:0
+}).format(Number(n) || 0);
 
-    if (value === null) return fallback;
-
-    const parsed = JSON.parse(value);
-
-    return parsed;
-  } catch (error) {
-    console.error("Gagal membaca data:", error);
-    return fallback;
-  }
+function read(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function save(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove("show"), 2800);
 }
 
-/* Menyimpan data dan memberi tahu jika penyimpanan gagal. */
-function writeStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (error) {
-    alert("Data tidak dapat disimpan di browser ini.");
-    return false;
-  }
+let menus = read(KEYS.menus, DEFAULT_MENUS);
+let orders = read(KEYS.orders, []);
+let ratings = read(KEYS.ratings, []);
+let settings = read(KEYS.settings, DEFAULT_SETTINGS);
+
+if (!Array.isArray(menus) || menus.length === 0) menus = DEFAULT_MENUS;
+save(KEYS.menus, menus);
+
+function refreshData() {
+  menus = read(KEYS.menus, DEFAULT_MENUS);
+  orders = read(KEYS.orders, []);
+  ratings = read(KEYS.ratings, []);
+  settings = read(KEYS.settings, DEFAULT_SETTINGS);
 }
 
-// Data pesanan dimulai kosong jika belum ada pesanan tersimpan.
-let orders = readStorage(ORDER_KEY, []);
-
-if (!Array.isArray(orders)) {
-  orders = [];
-}
-
-// Mengambil menu tersimpan atau menggunakan menu awal.
-let products = readStorage(PRODUCT_KEY, null);
-
-if (!Array.isArray(products)) {
-  products = defaultProducts.map(product => ({ ...product }));
-  writeStorage(PRODUCT_KEY, products);
-}
-
-/* =====================================================
-   2. ELEMEN HALAMAN DAN FORMAT RUPIAH
-   ===================================================== */
-
-const ordersList = document.getElementById("ordersList");
-const productsList = document.getElementById("productsList");
-
-const orderSearch = document.getElementById("orderSearch");
-const statusFilter = document.getElementById("statusFilter");
-
-const ordersMessage = document.getElementById("ordersMessage");
-const productsMessage = document.getElementById("productsMessage");
-
-function rupiah(value) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0
-  }).format(value);
-}
-
-/* Membuat elemen teks tanpa memasukkan HTML dari pengguna. */
-function makeText(tag, text, className = "") {
-  const element = document.createElement(tag);
-  element.textContent = text;
-
-  if (className) {
-    element.className = className;
-  }
-
-  return element;
-}
-
-/* =====================================================
-   3. DASHBOARD DAN STATISTIK
-   ===================================================== */
-
-function renderDashboard() {
-  const completed = orders.filter(
-    order => order.status === "Selesai"
+function renderStats() {
+  const completed = orders.filter(o => o.status === "Selesai");
+  const active = orders.filter(o =>
+    ["Menunggu", "Diproses", "Siap Diambil"].includes(o.status)
   );
 
-  const active = orders.filter(
-    order =>
-      order.status !== "Selesai" &&
-      order.status !== "Dibatalkan"
-  );
-
-  // Omzet hanya menghitung pesanan berstatus Selesai.
-  const revenue = completed.reduce(
-    (sum, order) => sum + Number(order.total || 0),
-    0
-  );
-
-  document.getElementById("statOrders").textContent =
-    orders.length;
-
-  document.getElementById("statActive").textContent =
-    active.length;
-
-  document.getElementById("statCompleted").textContent =
-    completed.length;
-
-  document.getElementById("statRevenue").textContent =
-    rupiah(revenue);
+  $("statOrders").textContent = orders.length;
+  $("statActive").textContent = active.length;
+  $("statCompleted").textContent = completed.length;
+  $("statRevenue").textContent = money(completed.reduce((sum, o) => sum + o.total, 0));
 }
-
-/* =====================================================
-   4. MENAMPILKAN DAFTAR PESANAN
-   ===================================================== */
 
 function renderOrders() {
-  ordersList.innerHTML = "";
+  const search = $("orderSearch").value.trim().toLowerCase();
+  const status = $("statusFilter").value;
 
-  const keyword = orderSearch.value
-    .trim()
-    .toLowerCase();
-
-  const selectedStatus = statusFilter.value;
-
-  // Memfilter pesanan berdasarkan kata kunci dan status.
-  const filteredOrders = orders.filter(order => {
-    const matchesKeyword = (
-      String(order.id).toLowerCase().includes(keyword) ||
-      String(order.customer || "").toLowerCase().includes(keyword)
-    );
-
-    const matchesStatus = (
-      selectedStatus === "Semua" ||
-      order.status === selectedStatus
-    );
-
-    return matchesKeyword && matchesStatus;
+  const filtered = orders.filter(order => {
+    const text = `${order.queue || ""} ${order.id || ""} ${order.customer || ""}`.toLowerCase();
+    return text.includes(search) && (status === "Semua" || order.status === status);
   });
 
-  if (filteredOrders.length === 0) {
-    ordersList.appendChild(
-      makeText(
-        "p",
-        orders.length === 0
-          ? "Belum ada pesanan. Pesanan yang tersimpan di browser ini akan muncul di sini."
-          : "Tidak ada pesanan yang cocok dengan pencarian.",
-        "empty-state"
-      )
-    );
-
-    renderDashboard();
-    return;
-  }
-
-  // Menampilkan pesanan terbaru di bagian atas.
-  filteredOrders.slice().reverse().forEach(order => {
-    const card = document.createElement("article");
-    card.className = "order-card";
-
-    const top = document.createElement("div");
-    top.className = "order-top";
-
-    const titleArea = document.createElement("div");
-
-    titleArea.appendChild(
-      makeText("h3", "Pesanan #" + order.id)
-    );
-
-    titleArea.appendChild(
-      makeText("p", "Pembeli: " + (order.customer || "Tidak diketahui"))
-    );
-
-    const badge = makeText(
-      "span",
-      order.status,
-      "status-label"
-    );
-
-    badge.dataset.status = order.status;
-
-    top.append(titleArea, badge);
-    card.appendChild(top);
-
-    // Daftar barang pada pesanan.
-    const details = document.createElement("div");
-    details.className = "order-detail";
-
-    const items = Array.isArray(order.items) ? order.items : [];
-
-    if (items.length === 0) {
-      details.appendChild(
-        makeText("p", "Rincian menu tidak tersedia.")
-      );
-    } else {
-      items.forEach(item => {
-        details.appendChild(
-          makeText(
-            "p",
-            `${item.name} × ${item.quantity} — ${rupiah(
-              Number(item.price) * Number(item.quantity)
-            )}`
-          )
-        );
-      });
-    }
-
-    card.appendChild(details);
-
-    // Menampilkan waktu jika tersedia.
-    if (order.createdAt) {
-      const date = new Date(order.createdAt);
-
-      if (!Number.isNaN(date.getTime())) {
-        card.appendChild(
-          makeText(
-            "p",
-            "Waktu: " + date.toLocaleString("id-ID")
-          )
-        );
-      }
-    }
-
-    card.appendChild(
-      makeText("p", "Total: " + rupiah(Number(order.total) || 0), "order-total")
-    );
-
-    // Pilihan status pesanan.
-    const actions = document.createElement("div");
-    actions.className = "order-actions";
-
-    const select = document.createElement("select");
-    select.className = "status-select";
-    select.setAttribute(
-      "aria-label",
-      "Ubah status pesanan " + order.id
-    );
-
-    ORDER_STATUSES.forEach(status => {
-      const option = document.createElement("option");
-      option.value = status;
-      option.textContent = status;
-      option.selected = status === order.status;
-      select.appendChild(option);
-    });
-
-    select.addEventListener("change", () => {
-      updateOrderStatus(order.id, select.value);
-    });
-
-    actions.appendChild(select);
-
-    // Pesanan dapat dibatalkan kecuali sudah selesai.
-    if (
-      order.status !== "Selesai" &&
-      order.status !== "Dibatalkan"
-    ) {
-      const cancelButton = makeText(
-        "button",
-        "Batalkan",
-        "delete-button"
-      );
-
-      cancelButton.type = "button";
-
-      cancelButton.addEventListener("click", () => {
-        const confirmed = confirm(
-          "Yakin ingin membatalkan pesanan ini?"
-        );
-
-        if (confirmed) {
-          updateOrderStatus(order.id, "Dibatalkan");
-        }
-      });
-
-      actions.appendChild(cancelButton);
-    }
-
-    card.appendChild(actions);
-    ordersList.appendChild(card);
-  });
-
-  renderDashboard();
+  $("ordersList").innerHTML = filtered.length ? filtered.map(order => `
+    <article class="seller-order">
+      <div class="seller-order-header">
+        <strong>${esc(order.queue || order.id)} · ${esc(order.customer)}</strong>
+        <span class="status-pill-small">${esc(order.status)}</span>
+      </div>
+      <p class="muted">${new Date(order.createdAt).toLocaleString("id-ID")}</p>
+      <p>${(order.items || []).map(item => `${esc(item.name)} × ${item.quantity}`).join(", ")}</p>
+      ${order.note ? `<p>Catatan: ${esc(order.note)}</p>` : ""}
+      <p><strong>${money(order.total)}</strong></p>
+      <div class="seller-order-actions">
+        <select data-status="${esc(order.id)}" aria-label="Ubah status pesanan">
+          ${["Menunggu","Diproses","Siap Diambil","Selesai","Ditolak"].map(s =>
+            `<option value="${s}" ${s === order.status ? "selected" : ""}>${s}</option>`
+          ).join("")}
+        </select>
+        <button class="button secondary" data-estimate="${esc(order.id)}">Atur estimasi</button>
+      </div>
+    </article>
+  `).join("") : '<p class="empty">Belum ada pesanan yang cocok.</p>';
 }
-
-/* =====================================================
-   5. MENGUBAH STATUS PESANAN
-   ===================================================== */
-
-function updateOrderStatus(orderId, newStatus) {
-  // Hanya menerima status yang diizinkan.
-  if (!ORDER_STATUSES.includes(newStatus)) return;
-
-  const previousOrders = orders;
-
-  orders = orders.map(order =>
-    String(order.id) === String(orderId)
-      ? { ...order, status: newStatus }
-      : order
-  );
-
-  // Perubahan diterapkan jika berhasil disimpan.
-  if (!writeStorage(ORDER_KEY, orders)) {
-    orders = previousOrders;
-    return;
-  }
-
-  ordersMessage.textContent =
-    "Status pesanan berhasil diperbarui.";
-
-  renderOrders();
-}
-
-/* =====================================================
-   6. PENCARIAN DAN FILTER PESANAN
-   ===================================================== */
-
-orderSearch.addEventListener("input", renderOrders);
-statusFilter.addEventListener("change", renderOrders);
-
-/* =====================================================
-   7. MENAMPILKAN DAFTAR MENU
-   ===================================================== */
 
 function renderProducts() {
-  productsList.innerHTML = "";
+  $("productsList").innerHTML = menus.map(menu => `
+    <article class="product-row">
+      <img src="${esc(menu.image || "")}" alt="${esc(menu.name)}"
+        onerror="this.onerror=null;this.src='https://placehold.co/200x200?text=Menu'">
+      <div>
+        <h3>${esc(menu.name)}</h3>
+        <p>${esc(menu.category)} · ${money(menu.price)}</p>
+        <p>Stok: <strong>${Number(menu.stock) || 0}</strong> · Terjual: ${Number(menu.sold) || 0}</p>
+      </div>
+      <div class="product-actions">
+        <button class="button secondary" data-edit="${esc(menu.id)}">Edit</button>
+        <button class="button secondary" data-stock="${esc(menu.id)}" data-delta="-1">− Stok</button>
+        <button class="button secondary" data-stock="${esc(menu.id)}" data-delta="1">+ Stok</button>
+        <button class="button" data-delete="${esc(menu.id)}">Hapus</button>
+      </div>
+    </article>
+  `).join("");
+}
 
-  if (products.length === 0) {
-    productsList.appendChild(
-      makeText("p", "Belum ada menu. Tambahkan menu baru.", "empty-state")
-    );
+function renderReport() {
+  const completed = orders.filter(order => order.status === "Selesai");
+  const revenue = completed.reduce((sum, order) => sum + order.total, 0);
+
+  $("reportSummary").textContent =
+    `${completed.length} pesanan selesai · Total omzet ${money(revenue)}`;
+
+  $("reportTableBody").innerHTML = orders.length ? orders.map(order => `
+    <tr>
+      <td>${esc(order.queue || order.id)}</td>
+      <td>${esc(order.customer)}</td>
+      <td>${money(order.total)}</td>
+      <td>${esc(order.status)}</td>
+      <td>${new Date(order.createdAt).toLocaleString("id-ID")}</td>
+    </tr>
+  `).join("") : '<tr><td colspan="5">Belum ada transaksi.</td></tr>';
+}
+
+function renderRatings() {
+  $("sellerRatings").innerHTML = ratings.length ? ratings.map(rating => `
+    <div class="rating-item">
+      <strong>${"★".repeat(Number(rating.stars))}${"☆".repeat(5 - Number(rating.stars))}</strong>
+      <p>${esc(rating.comment || "Tanpa komentar")}</p>
+      <small class="muted">${new Date(rating.createdAt).toLocaleDateString("id-ID")}</small>
+    </div>
+  `).join("") : '<p class="muted">Belum ada rating.</p>';
+}
+
+function renderSettings() {
+  $("isOpenInput").checked = settings.isOpen !== false;
+  $("openingTimeInput").value = settings.openingTime || "07:00";
+  $("closingTimeInput").value = settings.closingTime || "15:00";
+  $("prepMinutesInput").value = settings.prepMinutes || 10;
+}
+
+function renderAll() {
+  renderStats();
+  renderOrders();
+  renderProducts();
+  renderReport();
+  renderRatings();
+  renderSettings();
+}
+
+function resetProductForm() {
+  $("productForm").reset();
+  $("productId").value = "";
+  $("saveProductButton").textContent = "Simpan menu";
+}
+
+$("productForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const id = $("productId").value || `m-${Date.now()}`;
+  const old = menus.find(menu => menu.id === id);
+
+  const product = {
+    id,
+    name: $("productName").value.trim(),
+    category: $("productCategory").value,
+    price: Number($("productPrice").value),
+    stock: Math.max(0, Number($("productStock").value)),
+    image: $("productImage").value.trim() || "https://placehold.co/600x400?text=Menu",
+    description: $("productDescription").value.trim(),
+    sold: old ? Number(old.sold) || 0 : 0,
+    rating: old ? Number(old.rating) || 0 : 0,
+    available: true
+  };
+
+  if (!product.name || product.price < 0 || !Number.isFinite(product.price)) {
+    toast("Periksa nama dan harga menu.");
     return;
   }
 
-  products.forEach(product => {
-    const card = document.createElement("article");
-    card.className = "product-card";
+  if (old) menus = menus.map(menu => menu.id === id ? product : menu);
+  else menus.unshift(product);
 
-    // Menampilkan gambar menu.
-    const image = document.createElement("img");
-    image.className = "product-thumb";
-    image.alt = "Gambar " + product.name;
-    image.loading = "lazy";
+  save(KEYS.menus, menus);
+  resetProductForm();
+  renderAll();
+  toast("Menu berhasil disimpan.");
+});
 
-    if (product.image) {
-      image.src = product.image;
-    } else {
-      image.src =
-        "https://placehold.co/200x200/eef2ff/4338ca?text=Menu";
-    }
+$("cancelEditButton").addEventListener("click", resetProductForm);
 
-    image.addEventListener("error", () => {
-      image.removeAttribute("src");
-      image.alt = "Gambar tidak tersedia";
-    }, { once: true });
+$("productsList").addEventListener("click", event => {
+  const edit = event.target.closest("[data-edit]");
+  const stock = event.target.closest("[data-stock]");
+  const remove = event.target.closest("[data-delete]");
 
-    const info = document.createElement("div");
-    info.className = "product-information";
+  if (edit) {
+    const menu = menus.find(item => item.id === edit.dataset.edit);
+    if (!menu) return;
 
-    info.appendChild(makeText("h3", product.name));
-    info.appendChild(makeText("p", rupiah(product.price)));
+    $("productId").value = menu.id;
+    $("productName").value = menu.name;
+    $("productCategory").value = menu.category;
+    $("productPrice").value = menu.price;
+    $("productStock").value = menu.stock;
+    $("productImage").value = menu.image || "";
+    $("productDescription").value = menu.description || "";
+    $("saveProductButton").textContent = "Simpan perubahan";
+    $("productName").focus();
+  }
 
-    info.appendChild(
-      makeText(
-        "p",
-        product.available ? "Tersedia" : "Tidak tersedia"
-      )
+  if (stock) {
+    menus = menus.map(menu => menu.id === stock.dataset.stock
+      ? { ...menu, stock: Math.max(0, (Number(menu.stock) || 0) + Number(stock.dataset.delta)) }
+      : menu
     );
-
-    const actions = document.createElement("div");
-    actions.className = "product-actions";
-
-    // Tombol mengubah ketersediaan menu.
-    const stockButton = makeText(
-      "button",
-      product.available ? "Nonaktifkan" : "Aktifkan",
-      "stock-button"
-    );
-
-    stockButton.type = "button";
-    stockButton.addEventListener("click", () => {
-      toggleProduct(product.id);
-    });
-
-    // Tombol mengubah nama, harga, dan gambar.
-    const editButton = makeText(
-      "button",
-      "Edit",
-      "edit-button"
-    );
-
-    editButton.type = "button";
-    editButton.addEventListener("click", () => {
-      editProduct(product.id);
-    });
-
-    // Tombol menghapus menu.
-    const deleteButton = makeText(
-      "button",
-      "Hapus",
-      "delete-button"
-    );
-
-    deleteButton.type = "button";
-    deleteButton.addEventListener("click", () => {
-      deleteProduct(product.id);
-    });
-
-    actions.append(stockButton, editButton, deleteButton);
-    info.appendChild(actions);
-
-    card.append(image, info);
-    productsList.appendChild(card);
-  });
-}
-
-/* =====================================================
-   8. MENAMBAHKAN MENU BARU
-   ===================================================== */
-
-document.getElementById("productForm").addEventListener(
-  "submit",
-  event => {
-    event.preventDefault();
-
-    const name = document.getElementById("productName")
-      .value.trim();
-
-    const price = Number(
-      document.getElementById("productPrice").value
-    );
-
-    const image = document.getElementById("productImage")
-      .value.trim();
-
-    if (!name || !Number.isSafeInteger(price) || price <= 0) {
-      productsMessage.textContent =
-        "Masukkan nama dan harga menu yang valid.";
-      return;
-    }
-
-    // Membuat ID unik sederhana untuk menu baru.
-    const newId = Date.now();
-
-    const newProduct = {
-      id: newId,
-      name,
-      price,
-      image,
-      available: true
-    };
-
-    const previousProducts = products;
-    products = [...products, newProduct];
-
-    if (!writeStorage(PRODUCT_KEY, products)) {
-      products = previousProducts;
-      return;
-    }
-
-    // Mengosongkan formulir setelah berhasil.
-    event.target.reset();
-
-    productsMessage.textContent =
-      "Menu berhasil ditambahkan.";
-
+    save(KEYS.menus, menus);
     renderProducts();
-  }
-);
-
-/* =====================================================
-   9. EDIT MENU
-   ===================================================== */
-
-function editProduct(productId) {
-  const product = products.find(
-    item => item.id === productId
-  );
-
-  if (!product) return;
-
-  const newName = prompt("Nama menu:", product.name);
-
-  // Tombol Cancel tidak mengubah data.
-  if (newName === null) return;
-
-  const cleanName = newName.trim();
-
-  if (!cleanName) {
-    alert("Nama menu tidak boleh kosong.");
-    return;
+    toast("Stok diperbarui.");
   }
 
-  const priceInput = prompt(
-    "Harga menu:",
-    String(product.price)
-  );
+  if (remove) {
+    const menu = menus.find(item => item.id === remove.dataset.delete);
+    if (!menu) return;
+    if (!confirm(`Hapus menu "${menu.name}"?`)) return;
 
-  if (priceInput === null) return;
-
-  const newPrice = Number(priceInput);
-
-  if (!Number.isSafeInteger(newPrice) || newPrice <= 0) {
-    alert("Harga harus berupa angka positif.");
-    return;
-  }
-
-  const imageInput = prompt(
-    "URL gambar (kosongkan jika tidak digunakan):",
-    product.image || ""
-  );
-
-  if (imageInput === null) return;
-
-  const newImage = imageInput.trim();
-
-  // URL gambar harus menggunakan HTTPS.
-  if (newImage && !/^https:\/\//i.test(newImage)) {
-    alert("URL gambar harus menggunakan HTTPS.");
-    return;
-  }
-
-  const previousProducts = products;
-
-  products = products.map(item =>
-    item.id === productId
-      ? {
-          ...item,
-          name: cleanName,
-          price: newPrice,
-          image: newImage
-        }
-      : item
-  );
-
-  if (!writeStorage(PRODUCT_KEY, products)) {
-    products = previousProducts;
-    return;
-  }
-
-  productsMessage.textContent = "Menu berhasil diperbarui.";
-  renderProducts();
-}
-
-/* =====================================================
-   10. MENGUBAH KETERSEDIAAN MENU
-   ===================================================== */
-
-function toggleProduct(productId) {
-  const previousProducts = products;
-
-  products = products.map(product =>
-    product.id === productId
-      ? { ...product, available: !product.available }
-      : product
-  );
-
-  if (!writeStorage(PRODUCT_KEY, products)) {
-    products = previousProducts;
-    return;
-  }
-
-  productsMessage.textContent =
-    "Ketersediaan menu berhasil diubah.";
-
-  renderProducts();
-}
-
-/* =====================================================
-   11. MENGHAPUS MENU
-   ===================================================== */
-
-function deleteProduct(productId) {
-  const product = products.find(
-    item => item.id === productId
-  );
-
-  if (!product) return;
-
-  const confirmed = confirm(
-    `Hapus menu "${product.name}" dari daftar penjual?`
-  );
-
-  if (!confirmed) return;
-
-  const previousProducts = products;
-
-  products = products.filter(
-    item => item.id !== productId
-  );
-
-  if (!writeStorage(PRODUCT_KEY, products)) {
-    products = previousProducts;
-    return;
-  }
-
-  productsMessage.textContent = "Menu berhasil dihapus.";
-  renderProducts();
-}
-
-/* =====================================================
-   12. MENYEGARKAN DATA DARI BROWSER YANG SAMA
-   ===================================================== */
-
-// Jika tab lain pada origin yang sama mengubah pesanan,
-// dashboard ini akan membaca data terbaru.
-window.addEventListener("storage", event => {
-  if (event.key === ORDER_KEY) {
-    orders = readStorage(ORDER_KEY, []);
-    renderOrders();
-  }
-
-  if (event.key === PRODUCT_KEY) {
-    products = readStorage(PRODUCT_KEY, defaultProducts);
+    menus = menus.filter(item => item.id !== menu.id);
+    save(KEYS.menus, menus);
     renderProducts();
+    toast("Menu dihapus.");
   }
 });
 
-/* =====================================================
-   13. MENJALANKAN DASHBOARD
-   ===================================================== */
+$("ordersList").addEventListener("change", event => {
+  const select = event.target.closest("[data-status]");
+  if (!select) return;
 
-renderDashboard();
-renderOrders();
-renderProducts();
+  const order = orders.find(item => item.id === select.dataset.status);
+  if (!order) return;
 
+  const previous = order.status;
+  order.status = select.value;
+
+  // Jika ditandai selesai, jumlah penjualan menu diperbarui.
+  // Status Selesai hanya boleh diproses satu kali.
+  if (previous !== "Selesai" && order.status === "Selesai") {
+    menus = menus.map(menu => {
+      const item = order.items.find(entry => entry.id === menu.id);
+      return item ? { ...menu, sold: (Number(menu.sold) || 0) + item.quantity } : menu;
+    });
+    save(KEYS.menus, menus);
+  }
+
+  save(KEYS.orders, orders);
+  renderAll();
+  toast("Status pesanan diperbarui.");
+});
+
+$("ordersList").addEventListener("click", event => {
+  const button = event.target.closest("[data-estimate]");
+  if (!button) return;
+
+  const order = orders.find(item => item.id === button.dataset.estimate);
+  if (!order) return;
+
+  const answer = prompt("Perkiraan persiapan dalam menit:", String(order.prepMinutes || settings.prepMinutes || 10));
+  if (answer === null) return;
+
+  const minutes = Number(answer);
+  if (!Number.isInteger(minutes) || minutes < 1 || minutes > 180) {
+    toast("Masukkan angka 1 sampai 180.");
+    return;
+  }
+
+  order.prepMinutes = minutes;
+  save(KEYS.orders, orders);
+  renderOrders();
+  toast("Estimasi waktu disimpan.");
+});
+
+$("settingsForm").addEventListener("submit", event => {
+  event.preventDefault();
+  settings = {
+    isOpen: $("isOpenInput").checked,
+    openingTime: $("openingTimeInput").value,
+    closingTime: $("closingTimeInput").value,
+    prepMinutes: Number($("prepMinutesInput").value)
+  };
+  save(KEYS.settings, settings);
+  toast("Pengaturan kantin disimpan.");
+});
+
+$("orderSearch").addEventListener("input", renderOrders);
+$("statusFilter").addEventListener("change", renderOrders);
+
+$("sellerRefreshButton").addEventListener("click", () => {
+  refreshData();
+  renderAll();
+  toast("Data lokal dimuat ulang.");
+});
+
+// Ekspor laporan transaksi ke file CSV.
+$("exportCsvButton").addEventListener("click", () => {
+  const header = ["Nomor", "Pembeli", "Total", "Status", "Waktu"];
+  const rows = orders.map(order => [
+    order.queue || order.id,
+    order.customer,
+    order.total,
+    order.status,
+    new Date(order.createdAt).toLocaleString("id-ID")
+  ]);
+
+  // Escape tanda kutip dan bungkus tiap kolom dengan tanda kutip.
+  const csv = [header, ...rows].map(row =>
+    row.map(value => `"${String(value ?? "").replace(/"/g, '""')}"`).join(",")
+  ).join("\r\n");
+
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `laporan-kantinQ-${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+});
+
+$("sellerThemeButton").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("kantinQTheme", document.body.classList.contains("dark") ? "dark" : "light");
+});
+
+window.addEventListener("storage", event => {
+  if (!event.key || Object.values(KEYS).includes(event.key)) {
+    refreshData();
+    renderAll();
+  }
+});
+
+$("sellerYear").textContent = new Date().getFullYear();
+if (localStorage.getItem("kantinQTheme") === "dark") {
+  document.body.classList.add("dark");
+}
+renderAll();
