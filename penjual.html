@@ -4,41 +4,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KantinQ - Dashboard Penjual</title>
-  <link rel="stylesheet" href="style.css">
+  <title>KantinQ - Panel Penjual</title>
   <link rel="stylesheet" href="penjual.css">
 </head>
 <body>
-  <header class="topbar">
-    <a href="index.html" class="brand">🍱 KantinQ Penjual</a>
-    <div class="header-actions">
-      <a href="index.html" class="button secondary">Halaman Pembeli</a>
-      <button id="sellerThemeButton" class="button">🌙 Tema</button>
-    </div>
+  <header class="seller-header">
+    <a href="index.html" class="seller-brand">🍱 Kantin<span>Q</span></a>
+    <nav>
+      <a href="index.html">← Halaman Pelanggan</a>
+      <a href="#pesanan">Pesanan</a>
+      <a href="#menu">Kelola Menu</a>
+      <a href="#laporan">Laporan</a>
+    </nav>
   </header>
 
-  <main class="container seller-container">
-    <section class="seller-welcome">
-      <span class="eyebrow">DASHBOARD PENJUAL</span>
-      <h1>Kelola kantinmu.</h1>
-      <p>Pantau pesanan, stok, dan penjualan dari satu halaman.</p>
+  <main class="seller-container">
+    <section class="seller-hero">
+      <div>
+        <span class="eyebrow">PANEL PENGELOLAAN KANTIN</span>
+        <h1>Halo, Penjual! 👋</h1>
+        <p>Kelola menu, pantau pesanan, dan panggil pelanggan saat pesanan siap.</p>
+      </div>
+      <div class="open-control">
+        <label for="openStatus">Status kantin</label>
+        <select id="openStatus">
+          <option value="open">Buka</option>
+          <option value="closed">Tutup</option>
+        </select>
+        <label for="prepMinutes">Estimasi persiapan (menit)</label>
+        <input id="prepMinutes" type="number" min="1" max="180" value="10">
+        <button id="saveSettingsButton" class="btn btn-primary" type="button">Simpan Pengaturan</button>
+      </div>
     </section>
 
     <section class="stats-grid">
-      <article class="stat-card"><span>Total pesanan</span><strong id="statOrders">0</strong></article>
-      <article class="stat-card"><span>Pesanan aktif</span><strong id="statActive">0</strong></article>
-      <article class="stat-card"><span>Pesanan selesai</span><strong id="statCompleted">0</strong></article>
-      <article class="stat-card"><span>Omzet selesai</span><strong id="statRevenue">Rp0</strong></article>
+      <article class="stat-card">
+        <span>Pesanan Aktif</span>
+        <strong id="activeCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>Pesanan Siap</span>
+        <strong id="readyCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>Menu Tersedia</span>
+        <strong id="menuCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>Penjualan Selesai</span>
+        <strong id="salesTotal">Rp0</strong>
+      </article>
     </section>
 
-    <section class="panel">
-      <div class="section-heading">
-        <div><h2>📦 Pesanan Masuk</h2><p>Ubah status pesanan sesuai proses di kantin.</p></div>
-        <button id="sellerRefreshButton" class="button secondary">Muat ulang</button>
+    <section class="seller-section" id="pesanan">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">PANTAU TRANSAKSI</span>
+          <h2>Daftar Pesanan</h2>
+        </div>
+        <button class="btn btn-outline" id="refreshButton" type="button">↻ Perbarui</button>
       </div>
-      <div class="seller-filters">
-        <input id="orderSearch" placeholder="Cari nomor antrean atau nama">
-        <select id="statusFilter">
+      <div class="filter-row">
+        <input id="orderSearch" type="search" placeholder="Cari nomor atau nama pelanggan">
+        <select id="orderFilter">
           <option value="Semua">Semua status</option>
           <option value="Menunggu">Menunggu</option>
           <option value="Diproses">Diproses</option>
@@ -47,82 +75,99 @@
           <option value="Ditolak">Ditolak</option>
         </select>
       </div>
-      <div id="ordersList" class="order-list"></div>
+      <div id="ordersList" class="orders-list"></div>
+      <p id="noOrders" class="empty">Belum ada pesanan.</p>
     </section>
 
-    <section class="panel">
-      <h2>🍽️ Tambah / Edit Menu</h2>
-      <p>Isi data menu. Gunakan tombol edit di daftar menu untuk mengubah menu yang sudah ada.</p>
-      <form id="productForm" class="product-form">
-        <input type="hidden" id="productId">
-        <label>Nama menu
-          <input id="productName" required maxlength="70" placeholder="Contoh: Bakso">
-        </label>
-        <label>Kategori
-          <select id="productCategory" required>
-            <option value="Makanan Berat">Makanan Berat</option>
-            <option value="Makanan Ringan">Makanan Ringan</option>
-            <option value="Minuman">Minuman</option>
-            <option value="Dessert">Dessert</option>
-          </select>
-        </label>
-        <label>Harga (rupiah)
-          <input id="productPrice" type="number" required min="0" step="500" placeholder="10000">
-        </label>
-        <label>Stok
-          <input id="productStock" type="number" required min="0" step="1" placeholder="20">
-        </label>
-        <label>URL gambar
-          <input id="productImage" type="url" placeholder="https://...">
-        </label>
-        <label>Deskripsi
-          <input id="productDescription" maxlength="150" placeholder="Deskripsi singkat">
-        </label>
-        <div class="form-actions">
-          <button class="button" type="submit" id="saveProductButton">Simpan menu</button>
-          <button class="button secondary" type="button" id="cancelEditButton">Batal edit</button>
+    <section class="seller-section" id="menu">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">ATUR DAFTAR JUALAN</span>
+          <h2>Kelola Menu</h2>
         </div>
-      </form>
-      <div id="productsList" class="products-list"></div>
-    </section>
-
-    <section class="panel">
-      <h2>⏰ Pengaturan Kantin</h2>
-      <form id="settingsForm" class="settings-form">
-        <label class="check-label">
-          <input id="isOpenInput" type="checkbox"> Kantin sedang menerima pesanan
-        </label>
-        <label>Jam buka <input id="openingTimeInput" type="time" required></label>
-        <label>Jam tutup <input id="closingTimeInput" type="time" required></label>
-        <label>Estimasi persiapan (menit)
-          <input id="prepMinutesInput" type="number" min="1" max="180" required>
-        </label>
-        <button class="button" type="submit">Simpan pengaturan</button>
-      </form>
-    </section>
-
-    <section class="panel">
-      <div class="section-heading">
-        <div><h2>📊 Laporan Penjualan</h2><p>Omzet dihitung dari pesanan berstatus selesai.</p></div>
-        <button id="exportCsvButton" class="button">Ekspor CSV</button>
       </div>
-      <div id="reportSummary" class="report-summary"></div>
-      <div class="table-scroll">
-        <table class="sales-table">
-          <thead><tr><th>Nomor</th><th>Pembeli</th><th>Total</th><th>Status</th><th>Waktu</th></tr></thead>
-          <tbody id="reportTableBody"></tbody>
-        </table>
+
+      <div class="seller-panel">
+        <h3 id="formTitle">Tambah Menu Baru</h3>
+        <form id="menuForm">
+          <input type="hidden" id="menuId">
+
+          <label for="menuName">Nama menu</label>
+          <input id="menuName" required maxlength="80" placeholder="Contoh: Puding Cokelat">
+
+          <div class="form-grid">
+            <div>
+              <label for="menuCategory">Kategori</label>
+              <select id="menuCategory" required>
+                <option value="Makanan">Makanan</option>
+                <option value="Minuman">Minuman</option>
+                <option value="Camilan">Camilan</option>
+                <option value="Dessert">Dessert</option>
+              </select>
+            </div>
+            <div>
+              <label for="menuPrice">Harga (Rp)</label>
+              <input id="menuPrice" type="number" min="1" required>
+            </div>
+            <div>
+              <label for="menuStock">Stok</label>
+              <input id="menuStock" type="number" min="0" required>
+            </div>
+          </div>
+
+          <label for="menuDescription">Deskripsi</label>
+          <input id="menuDescription" required maxlength="180" placeholder="Deskripsi singkat makanan">
+
+          <label for="menuImage">URL gambar</label>
+          <input id="menuImage" type="url" placeholder="https://...">
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="saveMenuButton" type="submit">Simpan Menu</button>
+            <button class="btn btn-outline" id="cancelEditButton" type="button">Batal / Reset</button>
+          </div>
+          <p class="small">Gunakan tautan gambar langsung yang dapat diakses publik.</p>
+        </form>
       </div>
+
+      <div id="sellerMenuList" class="seller-menu-list"></div>
     </section>
 
-    <section class="panel">
-      <h2>⭐ Rating Pembeli</h2>
-      <div id="sellerRatings" class="rating-list"></div>
+    <section class="seller-section" id="laporan">
+      <div class="section-title">
+        <div>
+          <span class="eyebrow">REKAP PENJUALAN</span>
+          <h2>Laporan Penjualan</h2>
+        </div>
+        <button id="downloadReportButton" class="btn btn-primary" type="button">Unduh CSV</button>
+      </div>
+      <div class="seller-panel">
+        <p class="muted">Laporan menghitung pesanan dengan status Selesai.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nomor</th>
+                <th>Pelanggan</th>
+                <th>Tanggal</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="reportList"></tbody>
+          </table>
+        </div>
+        <div class="report-total">
+          Total penjualan selesai: <strong id="reportTotal">Rp0</strong>
+        </div>
+      </div>
     </section>
   </main>
 
-  <div id="toast" class="toast" role="status"></div>
-  <footer class="footer">© <span id="sellerYear"></span> KantinQ</footer>
+  <footer class="seller-footer">
+    KantinQ · Panel Penjual
+    <p>Data demo disimpan pada browser ini.</p>
+  </footer>
+
+  <div id="sellerToast" class="seller-toast" role="status" aria-live="polite"></div>
   <script src="penjual.js"></script>
 </body>
 </html>
