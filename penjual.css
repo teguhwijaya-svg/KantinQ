@@ -1,549 +1,82 @@
 
-/* ==================================================
-   1. WARNA DAN PENGATURAN DASAR
-   ================================================== */
-
-:root {
-  --seller-primary: #4f46e5;
-  --seller-green: #0d9488;
-  --seller-bg: #f4f7fb;
-  --seller-text: #1f2937;
-  --seller-muted: #6b7280;
-  --seller-border: #e5e7eb;
-  --seller-white: #ffffff;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 20px;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  color: var(--seller-text);
-  background: var(--seller-bg);
-  line-height: 1.6;
-}
-
-/* ==================================================
-   2. HEADER DAN NAVIGASI
-   ================================================== */
-
-.seller-header {
-  padding: 24px;
+.seller-container { max-width: 1180px; }
+.seller-welcome {
+  padding: 30px;
+  border-radius: 22px;
   color: white;
-  background: linear-gradient(135deg, #3730a3, #6366f1);
+  background: linear-gradient(125deg, #4338ca, #0f766e);
+  margin-bottom: 22px;
 }
-
-.seller-header-inner {
-  max-width: 1150px;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 18px;
-}
-
-.seller-header h1 {
-  margin: 0;
-  font-size: clamp(25px, 4vw, 36px);
-}
-
-.seller-header h1 span {
-  color: #fbbf24;
-}
-
-.seller-header p {
-  margin: 5px 0 0;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 10px 15px;
-  color: white;
-  border: 1px solid #ffffff80;
-  border-radius: 10px;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  background: #ffffff20;
-}
-
-.seller-container {
-  width: min(1150px, 100%);
-  margin: auto;
-  padding: 22px;
-}
-
-.seller-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
-}
-
-.seller-nav a {
-  padding: 10px 15px;
-  color: var(--seller-primary);
-  background: white;
-  border: 1px solid var(--seller-border);
-  border-radius: 9px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.seller-nav a:hover {
-  background: #eef2ff;
-}
-
-/* ==================================================
-   3. BAGIAN DASHBOARD
-   ================================================== */
-
-.seller-section {
-  margin-bottom: 30px;
-  padding: 24px;
-  background: white;
-  border: 1px solid var(--seller-border);
-  border-radius: 16px;
-  box-shadow: 0 4px 14px #00000005;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.section-heading h2 {
-  margin: 0;
-  font-size: clamp(21px, 3vw, 27px);
-}
-
-.section-heading p {
-  margin: 5px 0 0;
-  color: var(--seller-muted);
-}
-
-.demo-label {
-  padding: 6px 10px;
-  color: #92400e;
-  background: #fef3c7;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-}
+.seller-welcome h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 8px 0; }
 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+  margin: 22px 0;
 }
-
 .stat-card {
-  min-width: 0;
-  padding: 18px;
-  background: #f8fafc;
-  border: 1px solid var(--seller-border);
-  border-radius: 12px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 8px;
 }
+.stat-card span { color: var(--muted); font-size: .9rem; }
+.stat-card strong { font-size: clamp(1.2rem, 2vw, 1.8rem); overflow-wrap: anywhere; }
 
-.stat-card span {
-  display: block;
-  color: var(--seller-muted);
-  font-size: 14px;
-}
-
-.stat-card strong {
-  display: block;
-  margin-top: 8px;
-  color: var(--seller-primary);
-  font-size: clamp(20px, 2.5vw, 27px);
-  overflow-wrap: anywhere;
-}
-
-/* ==================================================
-   4. INPUT DAN FORM
-   ================================================== */
-
-.seller-section label {
-  display: block;
-  margin: 14px 0 6px;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.seller-input {
-  width: 100%;
-  min-height: 46px;
-  padding: 11px 12px;
-  color: var(--seller-text);
-  background: white;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
-  font: inherit;
-  font-size: 16px;
-}
-
-.seller-input:focus {
-  outline: 2px solid #a5b4fc;
-  outline-offset: 2px;
-}
+.seller-filters { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 16px 0; }
+.seller-order { border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+.seller-order-header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.seller-order p { margin: 6px 0; }
+.seller-order-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.seller-order-actions select { max-width: 190px; }
 
 .product-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  align-items: end;
-  margin-bottom: 24px;
-}
-
-.product-form > div {
-  min-width: 0;
-}
-
-.product-form label {
-  margin-top: 0;
-}
-
-.product-form button {
-  grid-column: 1 / -1;
-}
-
-.seller-button {
-  min-height: 46px;
-  padding: 11px 15px;
-  color: white;
-  background: var(--seller-primary);
-  border: 0;
-  border-radius: 9px;
-  font: inherit;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.seller-button:hover {
-  background: #3730a3;
-}
-
-/* ==================================================
-   5. KARTU PESANAN
-   ================================================== */
-
-.orders-list,
-.products-list {
-  display: grid;
   gap: 14px;
   margin-top: 18px;
 }
-
-.order-card,
-.product-card {
-  min-width: 0;
-  padding: 17px;
-  background: white;
-  border: 1px solid var(--seller-border);
-  border-radius: 12px;
-}
-
-.order-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.order-top h3,
-.product-card h3 {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.order-detail {
-  margin: 12px 0;
-  color: var(--seller-muted);
-  overflow-wrap: anywhere;
-}
-
-.order-total {
-  margin: 12px 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--seller-primary);
-}
-
-.order-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 12px;
-}
-
-.order-actions button,
-.product-actions button {
-  min-height: 42px;
-  padding: 9px 12px;
-  border: 0;
-  border-radius: 8px;
-  font: inherit;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.status-select {
-  flex: 1;
-  min-width: 150px;
-  min-height: 42px;
-  padding: 8px;
-  border: 1px solid var(--seller-border);
-  border-radius: 8px;
-  background: white;
-  font: inherit;
-}
-
-.status-label {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 20px;
-  background: #e0e7ff;
-  color: #3730a3;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.status-label[data-status="Menunggu"] {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-label[data-status="Diproses"] {
-  background: #dbeafe;
-  color: #1d4ed8;
-}
-
-.status-label[data-status="Siap Diambil"] {
-  background: #ccfbf1;
-  color: #115e59;
-}
-
-.status-label[data-status="Selesai"] {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-label[data-status="Dibatalkan"] {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.empty-state {
-  padding: 20px;
-  color: var(--seller-muted);
-  background: #f8fafc;
-  border-radius: 10px;
-  text-align: center;
-}
-
-/* ==================================================
-   6. KELOLA MENU
-   ================================================== */
-
-.product-card {
-  display: flex;
+.product-form label, .settings-form label { display: grid; gap: 6px; }
+.form-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.products-list { display: grid; gap: 12px; margin-top: 24px; }
+.product-row {
+  display: grid;
+  grid-template-columns: 76px 1fr auto;
+  gap: 14px;
   align-items: center;
-  gap: 15px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
 }
+.product-row img { width: 76px; height: 76px; object-fit: cover; border-radius: 10px; }
+.product-row h3 { margin: 0; }
+.product-row p { margin: 4px 0; color: var(--muted); font-size: .9rem; }
+.product-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.product-actions .button { padding: 8px 10px; font-size: .85rem; }
 
-.product-thumb {
-  width: 88px;
-  height: 88px;
-  flex-shrink: 0;
-  object-fit: cover;
-  background: #eef2ff;
-  border-radius: 10px;
+.settings-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 15px; }
+.settings-form .check-label { display: flex; align-items: center; gap: 9px; }
+.settings-form .check-label input { width: auto; }
+.settings-form button { align-self: end; }
+
+.report-summary { padding: 14px 0; font-weight: 700; }
+.table-scroll { width: 100%; overflow-x: auto; }
+.sales-table { width: 100%; border-collapse: collapse; min-width: 620px; }
+.sales-table th, .sales-table td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
+.sales-table th { background: var(--bg); }
+
+@media (max-width: 800px) {
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-.product-information {
-  flex: 1;
-  min-width: 0;
-}
-
-.product-information p {
-  margin: 5px 0;
-  color: var(--seller-muted);
-  overflow-wrap: anywhere;
-}
-
-.product-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.edit-button {
-  color: #1d4ed8;
-  background: #dbeafe;
-}
-
-.delete-button {
-  color: #b91c1c;
-  background: #fee2e2;
-}
-
-.stock-button {
-  color: #115e59;
-  background: #ccfbf1;
-}
-
-#ordersMessage,
-#productsMessage {
-  color: var(--seller-green);
-  font-weight: bold;
-}
-
-/* ==================================================
-   7. FOOTER
-   ================================================== */
-
-.seller-footer {
-  padding: 22px;
-  color: white;
-  background: #111827;
-  text-align: center;
-}
-
-.seller-footer p {
-  margin: 0;
-}
-
-/* ==================================================
-   8. RESPONSIVE TABLET
-   ================================================== */
-
-@media (max-width: 900px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .seller-container {
-    padding: 18px;
-  }
-}
-
-/* ==================================================
-   9. RESPONSIVE HP ANDROID DAN IPHONE
-   ================================================== */
-
 @media (max-width: 600px) {
-  .seller-header {
-    padding: 20px 15px;
-  }
-
-  .seller-header-inner {
-    align-items: stretch;
-  }
-
-  .back-link {
-    align-self: flex-start;
-  }
-
-  .seller-container {
-    padding: 12px;
-  }
-
-  .seller-nav {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .seller-nav a {
-    padding: 10px 4px;
-    font-size: 13px;
-    text-align: center;
-  }
-
-  .seller-section {
-    padding: 15px;
-    margin-bottom: 18px;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 9px;
-  }
-
-  .stat-card {
-    padding: 12px;
-  }
-
-  .product-form {
-    grid-template-columns: 1fr;
-  }
-
-  .product-form button {
-    grid-column: auto;
-  }
-
-  .product-card {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .product-thumb {
-    width: 72px;
-    height: 72px;
-  }
-
-  .product-actions {
-    width: 100%;
-  }
-
-  .product-actions button {
-    flex: 1;
-  }
-
-  .order-actions {
-    align-items: stretch;
-  }
-
-  .order-actions button,
-  .status-select {
-    flex: 1 1 100%;
-  }
+  .seller-welcome { padding: 22px; }
+  .seller-filters, .product-form, .settings-form { grid-template-columns: 1fr; }
+  .product-row { grid-template-columns: 58px 1fr; }
+  .product-row img { width: 58px; height: 58px; }
+  .product-actions { grid-column: 1 / -1; }
+  .product-actions .button { flex: 1; }
 }
-
-/* HP sangat kecil */
-@media (max-width: 360px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .product-thumb {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-/* Memudahkan penggunaan keyboard */
-button:focus-visible,
-a:focus-visible,
-select:focus-visible {
-  outline: 3px solid #a5b4fc;
-  outline-offset: 3px;
-}
-
