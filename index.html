@@ -3,6 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <!-- Supaya tampilan menyesuaikan ukuran layar HP dan komputer -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#4f46e5">
   <title>KantinQ - Kantin Digital</title>
@@ -10,133 +11,139 @@
 </head>
 <body>
   <header class="topbar">
-    <a href="index.html" class="brand">🍱 KantinQ</a>
-    <div class="header-actions">
-      <button id="themeButton" class="button secondary">🌙 Tema</button>
-      <button id="cartButton" class="button">🛒 Keranjang <span id="cartCount">0</span></button>
-      <a class="button secondary" href="penjual.html">POV Penjual</a>
-    </div>
+    <a class="brand" href="index.html">
+      <span class="brand-icon">🍱</span>
+      <span>Kantin<span class="brand-accent">Q</span>
+        <small>Kantin digital sekolah</small>
+      </span>
+    </a>
+    <nav>
+      <a class="nav-link active" href="#menu">Menu</a>
+      <a class="nav-link" href="#pesanan">Pesanan Saya</a>
+      <a class="nav-link" href="penjual.html">Halaman Penjual ↗</a>
+    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
       <div>
-        <span class="eyebrow">KANTIN DIGITAL SEKOLAH</span>
-        <h1>Pesan makanan, <br>tanpa antre lama.</h1>
-        <p>Pilih menu favoritmu dan ambil pesanan saat sudah siap.</p>
-        <span id="openStatus" class="status-pill">Memeriksa jam operasional...</span>
+        <span class="eyebrow">MAKAN ENAK, PESAN PRAKTIS</span>
+        <h1>Istirahat lebih nyaman dengan <span>KantinQ.</span></h1>
+        <p>Pilih makanan favoritmu, pesan terlebih dahulu, lalu ambil ketika sudah siap.</p>
+        <a class="button button-light" href="#menu">Lihat Menu ↓</a>
       </div>
-      <div class="hero-emoji">🍜🥤</div>
+      <div class="hero-art" aria-hidden="true">🍜🥤🍮</div>
     </section>
 
-    <section class="toolbar">
-      <input id="searchInput" type="search" placeholder="Cari bakso, nasi goreng..." aria-label="Cari menu">
-      <select id="categoryFilter" aria-label="Filter kategori">
-        <option value="Semua">Semua kategori</option>
-        <option value="Makanan Berat">Makanan Berat</option>
-        <option value="Makanan Ringan">Makanan Ringan</option>
-        <option value="Minuman">Minuman</option>
-        <option value="Dessert">Dessert</option>
-      </select>
-      <select id="sortFilter" aria-label="Urutkan menu">
-        <option value="default">Urutan biasa</option>
-        <option value="price-asc">Harga termurah</option>
-        <option value="price-desc">Harga termahal</option>
-        <option value="popular">Terlaris</option>
-      </select>
-    </section>
-
-    <section>
+    <section class="section" id="menu">
       <div class="section-heading">
         <div>
+          <span class="eyebrow">PILIH FAVORITMU</span>
           <h2>Menu Kantin</h2>
-          <p>Pilih makanan yang ingin kamu pesan.</p>
+          <p class="muted">Pilih makanan dan minuman yang kamu inginkan.</p>
         </div>
-        <span id="menuCount" class="muted"></span>
+        <button class="button button-outline" id="themeButton" type="button">🌙 Mode Gelap</button>
       </div>
-      <div id="menuGrid" class="menu-grid"></div>
-      <p id="emptyMenus" class="empty hidden">Menu tidak ditemukan.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Cari bakso, nasi goreng..." aria-label="Cari menu">
+        <select id="categoryFilter" aria-label="Filter kategori">
+          <option value="Semua">Semua kategori</option>
+          <option value="Makanan">Makanan</option>
+          <option value="Minuman">Minuman</option>
+          <option value="Camilan">Camilan</option>
+          <option value="Dessert">Dessert</option>
+        </select>
+      </div>
+
+      <div id="menuList" class="menu-grid"></div>
+      <p id="emptyMenu" class="empty hidden">Menu tidak ditemukan.</p>
     </section>
 
-    <section class="panel">
-      <h2>🏷️ Promo KantinQ</h2>
-      <p>Masukkan kode promo saat checkout.</p>
-      <div class="promo-row">
-        <input id="promoInput" placeholder="Contoh: HEMAT2000" aria-label="Kode promo">
-        <button id="checkPromoButton" class="button secondary">Cek promo</button>
-      </div>
-      <p id="promoMessage" class="muted"></p>
-    </section>
-
-    <section class="panel">
+    <section class="section" id="keranjang">
       <div class="section-heading">
         <div>
-          <h2>📦 Pesanan Saya</h2>
-          <p>Pantau pesanan yang kamu buat di perangkat ini.</p>
+          <span class="eyebrow">SEBELUM MEMESAN</span>
+          <h2>Keranjang Belanja</h2>
         </div>
-        <button id="refreshOrdersButton" class="button secondary">Muat ulang</button>
+        <span class="count-pill" id="cartCount">0 item</span>
+      </div>
+
+      <div class="panel">
+        <div id="cartList"></div>
+        <p id="emptyCart" class="empty">Keranjangmu masih kosong. Yuk, pilih menu!</p>
+
+        <div class="promo-row">
+          <input id="promoInput" type="text" placeholder="Kode promo (HEMAT2000)">
+          <button class="button button-outline" id="applyPromoButton" type="button">Pakai Promo</button>
+        </div>
+        <p id="promoMessage" class="small muted"></p>
+
+        <div class="price-line"><span>Subtotal</span><strong id="subtotal">Rp0</strong></div>
+        <div class="price-line"><span>Diskon</span><strong id="discount">Rp0</strong></div>
+        <div class="price-line total-line"><span>Total pembayaran</span><strong id="total">Rp0</strong></div>
+
+        <div class="checkout-fields">
+          <label for="customerName">Nama pelanggan</label>
+          <input id="customerName" type="text" maxlength="50" placeholder="Masukkan nama kamu">
+
+          <label for="customerClass">Kelas (opsional)</label>
+          <input id="customerClass" type="text" maxlength="30" placeholder="Contoh: XI-2">
+
+          <button id="checkoutButton" class="button button-primary full-width" type="button">
+            Pesan Sekarang
+          </button>
+          <p class="small muted">Pastikan nama dan pesanan sudah benar sebelum checkout.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pesanan">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">PANTAU PESANANMU</span>
+          <h2>Pesanan Aktif</h2>
+        </div>
       </div>
       <div id="myOrders" class="order-list"></div>
+      <p id="emptyOrders" class="empty">Belum ada pesanan aktif.</p>
     </section>
 
-    <section class="panel">
-      <h2>⭐ Beri Rating</h2>
-      <p>Berikan penilaian setelah pesanan selesai.</p>
-      <form id="ratingForm" class="rating-form">
-        <select id="ratingOrder" required aria-label="Pilih pesanan selesai">
-          <option value="">Pilih pesanan selesai</option>
-        </select>
-        <select id="ratingStars" required aria-label="Nilai bintang">
-          <option value="5">★★★★★ - 5</option>
-          <option value="4">★★★★ - 4</option>
-          <option value="3">★★★ - 3</option>
-          <option value="2">★★ - 2</option>
-          <option value="1">★ - 1</option>
-        </select>
-        <input id="ratingComment" maxlength="200" placeholder="Komentar (opsional)">
-        <button class="button" type="submit">Kirim rating</button>
-      </form>
-      <div id="ratingsList" class="rating-list"></div>
+    <section class="section" id="pemanggilan">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">PESANAN SIAP DIAMBIL</span>
+          <h2>📣 Pemanggilan Pelanggan</h2>
+        </div>
+      </div>
+      <div id="customerCall" class="call-banner hidden" aria-live="polite">
+        <h3 id="customerCallTitle">Pesanan siap!</h3>
+        <p id="customerCallMessage"></p>
+        <button class="button button-light" id="dismissCallButton" type="button">Tutup pemberitahuan</button>
+      </div>
+      <p id="noCustomerCall" class="empty">Belum ada pemanggilan pesanan.</p>
+      <p class="small muted">Izinkan notifikasi browser jika ingin menerima pemberitahuan saat halaman terbuka.</p>
+    </section>
+
+    <section class="section" id="riwayat">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CATATAN PEMBELIAN</span>
+          <h2>Riwayat Pesanan</h2>
+        </div>
+      </div>
+      <div id="orderHistory" class="order-list"></div>
+      <p id="emptyHistory" class="empty">Riwayat pesanan masih kosong.</p>
     </section>
   </main>
 
-  <dialog id="cartDialog" class="dialog">
-    <form method="dialog" class="dialog-top">
-      <h2>🛒 Keranjang</h2>
-      <button class="icon-button" aria-label="Tutup">✕</button>
-    </form>
-    <div id="cartItems"></div>
-    <div class="cart-summary">
-      <div><span>Subtotal</span><strong id="cartSubtotal">Rp0</strong></div>
-      <div><span>Diskon</span><strong id="cartDiscount">Rp0</strong></div>
-      <div class="total-line"><span>Total</span><strong id="cartTotal">Rp0</strong></div>
-    </div>
-    <form id="checkoutForm" class="checkout-form">
-      <label>Nama pembeli
-        <input id="customerName" required maxlength="60" placeholder="Nama kamu">
-      </label>
-      <label>Catatan pesanan (opsional)
-        <input id="orderNote" maxlength="150" placeholder="Contoh: tidak pedas">
-      </label>
-      <button id="checkoutButton" class="button full" type="submit">Buat pesanan</button>
-    </form>
-  </dialog>
-
-  <dialog id="receiptDialog" class="dialog">
-    <form method="dialog" class="dialog-top">
-      <h2>🧾 Struk Digital</h2>
-      <button class="icon-button" aria-label="Tutup">✕</button>
-    </form>
-    <div id="receiptContent"></div>
-    <button id="printReceiptButton" class="button full">Cetak / Simpan PDF</button>
-  </dialog>
-
-  <div id="toast" class="toast" role="status"></div>
-
   <footer class="footer">
-    <p>© <span id="year"></span> KantinQ · Kantin sekolah lebih praktis.</p>
+    <strong>KantinQ</strong>
+    <p>Kantin digital sekolah yang praktis dan mudah digunakan.</p>
+    <a href="penjual.html">Masuk ke halaman penjual</a>
   </footer>
 
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
 </body>
 </html>
