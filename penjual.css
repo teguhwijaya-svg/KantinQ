@@ -1,15 +1,28 @@
 
+/* =====================================================
+   KANTINQ - CSS HALAMAN PENJUAL
+   File: penjual.css
+   ===================================================== */
+
+/* 1. WARNA DAN PENGATURAN DASAR */
 :root {
   --primary: #4f46e5;
   --primary-dark: #3730a3;
+  --primary-light: #eef2ff;
   --teal: #0d9488;
-  --bg: #f5f7ff;
-  --surface: #fff;
+  --teal-light: #ccfbf1;
+  --background: #f4f6fc;
+  --surface: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
   --border: #e5e7eb;
+  --success: #15803d;
+  --success-light: #dcfce7;
+  --warning: #b45309;
+  --warning-light: #fef3c7;
   --danger: #dc2626;
-  --shadow: 0 10px 28px rgba(31, 41, 55, 0.06);
+  --danger-light: #fee2e2;
+  --shadow: 0 8px 25px rgba(31, 41, 55, 0.06);
 }
 
 * {
@@ -18,23 +31,22 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 85px;
+  scroll-padding-top: 100px;
 }
 
 body {
   margin: 0;
   color: var(--text);
-  background: var(--bg);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
   line-height: 1.6;
 }
 
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-button, input, select {
+button,
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -42,37 +54,64 @@ button {
   cursor: pointer;
 }
 
-input, select {
+input,
+select,
+textarea {
   width: 100%;
   min-width: 0;
-  padding: 11px 13px;
+  padding: 12px 14px;
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 11px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus, select:focus {
-  outline: 2px solid #c7d2fe;
+input:focus,
+select:focus,
+textarea:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #a5b4fc;
+  outline-offset: 3px;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* 2. NAVIGASI ATAS */
 .seller-header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 18px;
-  padding: 15px 5%;
+  gap: 24px;
+  min-height: 76px;
+  padding: 14px max(5%, calc((100% - 1200px) / 2));
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 3px 15px rgba(31, 41, 55, 0.03);
 }
 
 .seller-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   color: var(--text);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -84,36 +123,46 @@ input:focus, select:focus {
 .seller-header nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  align-items: center;
+  gap: 10px 22px;
 }
 
 .seller-header nav a {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
+  transition: color 0.2s;
 }
 
+.seller-header nav a:hover {
+  color: var(--primary);
+}
+
+/* 3. LEBAR KONTEN */
 .seller-container {
-  width: min(1150px, 90%);
-  margin: 30px auto;
+  width: min(1200px, 90%);
+  margin: 32px auto 60px;
 }
 
+/* 4. BAGIAN SAMBUTAN PENJUAL */
 .seller-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(250px, 0.8fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
   align-items: center;
-  gap: 25px;
-  padding: clamp(24px, 4vw, 45px);
+  gap: 30px;
+  padding: clamp(25px, 4vw, 48px);
   color: white;
-  background: linear-gradient(130deg, #4f46e5, #0d9488);
-  border-radius: 24px;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 48%, #0d9488 100%);
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(79, 70, 229, 0.18);
 }
 
 .eyebrow {
+  display: inline-block;
   color: var(--teal);
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.4px;
+  letter-spacing: 1.5px;
 }
 
 .seller-hero .eyebrow {
@@ -121,89 +170,168 @@ input:focus, select:focus {
 }
 
 .seller-hero h1 {
-  margin: 8px 0;
-  font-size: clamp(28px, 4vw, 42px);
+  margin: 10px 0;
+  font-size: clamp(29px, 4vw, 43px);
   line-height: 1.2;
 }
 
 .seller-hero p {
+  max-width: 570px;
+  margin: 12px 0 0;
   color: #eef2ff;
+  font-size: 15px;
 }
 
+/* Pengaturan buka/tutup kantin */
 .open-control {
   display: grid;
-  gap: 8px;
-  padding: 18px;
+  gap: 9px;
+  padding: 22px;
   color: var(--text);
   background: var(--surface);
-  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 19px;
+  box-shadow: var(--shadow);
 }
 
-.open-control label, form label {
+.open-control label {
+  margin-top: 3px;
   font-size: 13px;
   font-weight: 700;
 }
 
+.open-control select,
+.open-control input {
+  background: var(--background);
+}
+
+/* 5. KARTU STATISTIK */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 15px;
-  margin: 25px 0;
+  gap: 18px;
+  margin: 25px 0 45px;
 }
 
 .stat-card {
-  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(31, 41, 55, 0.09);
+}
+
+.stat-card::after {
+  position: absolute;
+  right: -18px;
+  bottom: -28px;
+  width: 90px;
+  height: 90px;
+  content: "";
+  background: var(--primary-light);
+  border-radius: 50%;
+}
+
+.stat-card:nth-child(2)::after {
+  background: var(--teal-light);
+}
+
+.stat-card:nth-child(3)::after {
+  background: #fef3c7;
+}
+
+.stat-card:nth-child(4)::after {
+  background: var(--success-light);
 }
 
 .stat-card span {
+  position: relative;
+  z-index: 1;
   display: block;
   color: var(--muted);
   font-size: 13px;
+  font-weight: 600;
 }
 
 .stat-card strong {
+  position: relative;
+  z-index: 1;
   display: block;
   margin-top: 8px;
   color: var(--primary);
-  font-size: clamp(20px, 3vw, 28px);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
+.stat-card:nth-child(2) strong {
+  color: var(--teal);
+}
+
+.stat-card:nth-child(3) strong {
+  color: var(--warning);
+}
+
+.stat-card:nth-child(4) strong {
+  color: var(--success);
+}
+
+/* 6. JUDUL BAGIAN */
 .seller-section {
   margin: 48px 0;
+  scroll-margin-top: 100px;
 }
 
 .section-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 18px;
+  margin-bottom: 22px;
 }
 
 .section-title h2 {
-  margin: 5px 0;
-  font-size: clamp(23px, 4vw, 30px);
+  margin: 5px 0 0;
+  font-size: clamp(23px, 3vw, 30px);
+  line-height: 1.3;
 }
 
+.section-title .eyebrow {
+  margin-bottom: 3px;
+}
+
+/* 7. SEMUA TOMBOL */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 14px;
+  gap: 7px;
+  min-height: 42px;
+  padding: 10px 15px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 11px;
+  font-size: 13px;
   font-weight: 700;
+  text-align: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
 }
 
 .btn:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
 }
 
 .btn-primary {
@@ -218,7 +346,11 @@ input:focus, select:focus {
 .btn-outline {
   color: var(--primary);
   background: var(--surface);
-  border-color: var(--border);
+  border-color: #c7d2fe;
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
 }
 
 .btn-danger {
@@ -226,293 +358,570 @@ input:focus, select:focus {
   background: var(--danger);
 }
 
-.filter-row {
-  display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 12px;
-  margin-bottom: 18px;
+.btn-danger:hover {
+  background: #b91c1c;
 }
 
+/* 8. PENCARIAN DAN FILTER PESANAN */
+.filter-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-row input,
+.filter-row select {
+  min-height: 48px;
+}
+
+/* 9. DAFTAR PESANAN */
 .orders-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  align-items: start;
+  gap: 18px;
 }
 
-.order-card, .seller-panel {
+.order-card {
   min-width: 0;
-  padding: 20px;
+  padding: 22px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 12px 30px rgba(31, 41, 55, 0.09);
 }
 
 .order-card h3 {
-  margin: 0 0 5px;
+  margin: 0 0 8px;
+  font-size: 18px;
   overflow-wrap: anywhere;
 }
 
 .order-card p {
-  margin: 5px 0;
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.order-card p strong {
+  color: var(--text);
 }
 
 .order-items {
-  padding-left: 20px;
-  font-size: 14px;
+  margin: 13px 0;
+  padding: 13px 13px 13px 30px;
+  background: var(--background);
+  border-radius: 12px;
+  font-size: 13px;
 }
 
+.order-items li {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Label status pesanan */
 .status-label {
-  display: inline-block;
-  margin: 7px 0;
-  padding: 5px 10px;
-  color: #92400e;
-  background: #fef3c7;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 8px 0;
+  padding: 6px 12px;
+  color: var(--warning);
+  background: var(--warning-light);
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
+/* Kontrol status dan estimasi */
 .order-controls {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 9px;
-  margin-top: 15px;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.order-controls select {
+  min-height: 43px;
+  background: var(--surface);
 }
 
 .order-controls .btn {
+  min-height: 43px;
+}
+
+.order-controls > .btn:only-child,
+.order-controls > .btn:last-child[data-call] {
   grid-column: 1 / -1;
 }
 
+/* Tombol khusus pemanggilan pelanggan */
 .order-call-button {
+  grid-column: 1 / -1;
   width: 100%;
-  margin-top: 8px;
-  color: #134e4a;
-  background: #ccfbf1;
-  border: 1px solid #5eead4;
+  color: #115e59;
+  background: var(--teal-light);
+  border: 1px solid #99f6e4;
+}
+
+.order-call-button:hover {
+  background: #99f6e4;
+}
+
+/* 10. FORM TAMBAH DAN EDIT MENU */
+.seller-panel {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  box-shadow: var(--shadow);
 }
 
 .seller-panel h3 {
-  margin-top: 0;
+  margin: 0 0 18px;
+  font-size: 19px;
 }
 
-form {
+#menuForm {
   display: grid;
-  gap: 9px;
+  gap: 10px;
+}
+
+#menuForm label {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#menuForm input,
+#menuForm select {
+  min-height: 45px;
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 
 .form-grid > div {
   display: grid;
-  gap: 7px;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
 }
 
 .form-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
-.small, .muted {
-  color: var(--muted);
-  font-size: 13px;
+#menuForm .small {
+  margin-bottom: 0;
 }
 
+/* 11. KARTU DAFTAR MENU PENJUAL */
 .seller-menu-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
-  margin-top: 18px;
+  gap: 18px;
+  margin-top: 20px;
 }
 
 .seller-menu-item {
   display: grid;
-  grid-template-columns: 100px minmax(0, 1fr);
-  gap: 15px;
-  padding: 14px;
+  grid-template-columns: 125px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 15px;
+  border-radius: 17px;
+  box-shadow: var(--shadow);
 }
 
 .seller-menu-item img {
-  width: 100px;
-  height: 100px;
+  display: block;
+  width: 125px;
+  height: 125px;
   object-fit: cover;
-  border-radius: 12px;
-  background: #e5e7eb;
+  background: var(--background);
+  border-radius: 13px;
 }
 
 .seller-menu-item h3 {
   margin: 0 0 5px;
+  font-size: 16px;
   overflow-wrap: anywhere;
 }
 
 .seller-menu-item p {
-  margin: 4px 0;
+  margin: 5px 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   overflow-wrap: anywhere;
 }
 
 .menu-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .menu-actions .btn {
-  padding: 7px 10px;
+  min-height: 35px;
+  padding: 7px 12px;
   font-size: 12px;
 }
 
+/* 12. TABEL LAPORAN PENJUALAN */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  text-align: left;
+}
+
+thead {
+  background: var(--primary-light);
+}
+
+th,
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+th {
+  color: var(--primary-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+td {
+  font-size: 13px;
+}
+
+tbody tr:hover {
+  background: var(--background);
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.report-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 17px;
+  border-top: 1px solid var(--border);
+}
+
+.report-total strong {
+  color: var(--primary);
+  font-size: 19px;
+}
+
+/* 13. PESAN KOSONG */
 .empty {
-  padding: 20px;
-  text-align: center;
+  padding: 28px 18px;
   color: var(--muted);
   background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: 14px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 15px;
+  text-align: center;
 }
 
 .hidden {
   display: none !important;
 }
 
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-
-th {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.report-total {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-  padding-top: 15px;
-  border-top: 1px solid var(--border);
-}
-
-.report-total strong {
-  color: var(--primary);
-}
-
-.seller-footer {
-  padding: 30px 5%;
-  color: var(--muted);
-  text-align: center;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
-
-.seller-footer p {
-  margin-bottom: 0;
-  font-size: 13px;
-}
-
+/* 14. NOTIFIKASI SINGKAT */
 .seller-toast {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 20;
-  max-width: calc(100% - 40px);
-  padding: 13px 17px;
+  right: 22px;
+  bottom: 22px;
+  z-index: 200;
+  width: max-content;
+  max-width: calc(100% - 44px);
+  padding: 14px 19px;
   color: white;
   background: #1f2937;
-  border-radius: 12px;
+  border: 1px solid #374151;
+  border-radius: 13px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
 }
 
 .seller-toast.show {
   opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-@media (max-width: 850px) {
+/* 15. FOOTER */
+.seller-footer {
+  margin-top: 65px;
+  padding: 32px 5%;
+  color: var(--muted);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 13px;
+}
+
+.seller-footer p {
+  margin: 5px 0 0;
+}
+
+/* =====================================================
+   16. RESPONSIVE UNTUK TABLET
+   ===================================================== */
+@media (max-width: 1000px) {
   .seller-header {
     align-items: flex-start;
     flex-direction: column;
+    gap: 12px;
+  }
+
+  .seller-header nav {
+    gap: 10px 18px;
   }
 
   .seller-hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.8fr);
+    gap: 20px;
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .orders-list, .seller-menu-list {
+  .orders-list,
+  .seller-menu-list {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 560px) {
-  .seller-container {
-    width: 92%;
-    margin-top: 18px;
+/* =====================================================
+   17. RESPONSIVE UNTUK HP
+   ===================================================== */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  .seller-header {
+    padding: 13px 4%;
+  }
+
+  .seller-brand {
+    font-size: 22px;
   }
 
   .seller-header nav {
-    gap: 10px 13px;
+    width: 100%;
+    gap: 9px 14px;
   }
 
   .seller-header nav a {
     font-size: 12px;
   }
 
-  .filter-row {
+  .seller-container {
+    width: 92%;
+    margin-top: 18px;
+  }
+
+  .seller-hero {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 23px 19px;
+    border-radius: 19px;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
+  .seller-hero h1 {
+    font-size: 30px;
   }
 
-  .seller-panel, .order-card {
-    padding: 15px;
+  .seller-hero p {
+    font-size: 13px;
   }
 
-  .seller-menu-item {
-    grid-template-columns: 80px minmax(0, 1fr);
+  .open-control {
+    padding: 17px;
+  }
+
+  .stats-grid {
+    gap: 11px;
+    margin: 18px 0 36px;
+  }
+
+  .stat-card {
+    padding: 16px 13px;
+    border-radius: 14px;
+  }
+
+  .stat-card span {
+    font-size: 11px;
+  }
+
+  .stat-card strong {
+    font-size: 21px;
+  }
+
+  .seller-section {
+    margin: 38px 0;
+  }
+
+  .section-title {
+    align-items: flex-start;
     gap: 10px;
   }
 
-  .seller-menu-item img {
-    width: 80px;
-    height: 80px;
+  .section-title h2 {
+    font-size: 23px;
+  }
+
+  .section-title .btn {
+    padding: 9px 11px;
+    font-size: 11px;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .order-card,
+  .seller-panel {
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .order-card h3 {
+    font-size: 16px;
   }
 
   .order-controls {
     grid-template-columns: 1fr;
   }
 
-  .order-controls .btn {
+  .order-controls .btn,
+  .order-controls .btn:last-child[data-call] {
     grid-column: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .seller-menu-list {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .seller-menu-item {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .seller-menu-item img {
+    width: 88px;
+    height: 88px;
+  }
+
+  .seller-menu-item h3 {
+    font-size: 14px;
+  }
+
+  .menu-actions .btn {
+    padding: 7px 9px;
+  }
+
+  .report-total {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .seller-toast {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100% - 24px);
+  }
+}
+
+/* =====================================================
+   18. HP SANGAT KECIL
+   ===================================================== */
+@media (max-width: 360px) {
+  .seller-container {
+    width: 94%;
+  }
+
+  .seller-header nav {
+    gap: 8px 10px;
+  }
+
+  .seller-header nav a {
+    font-size: 11px;
+  }
+
+  .seller-menu-item {
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 9px;
+    padding: 10px;
+  }
+
+  .seller-menu-item img {
+    width: 68px;
+    height: 68px;
+  }
+
+  .stat-card strong {
+    font-size: 18px;
   }
 }
