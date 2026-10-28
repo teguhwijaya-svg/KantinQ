@@ -1,301 +1,201 @@
 
-/* ==================================================
-   1. PENGATURAN DASAR DAN WARNA WEBSITE
-   ================================================== */
-
-/* Variabel warna supaya mudah diubah */
+/* =========================
+   TEMA DAN WARNA DASAR
+   ========================= */
 :root {
   --primary: #4f46e5;
-  --primary-dark: #3730a3;
-  --secondary: #0d9488;
-  --background: #f4f7fb;
+  --primary-dark: #4338ca;
+  --accent: #0d9488;
+  --bg: #f6f7fb;
+  --surface: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
   --border: #e5e7eb;
-  --white: #ffffff;
+  --danger: #dc2626;
+  --shadow: 0 8px 25px rgba(31, 41, 55, .07);
 }
 
-/* Membuat ukuran elemen lebih mudah dihitung */
-* {
-  box-sizing: border-box;
+body.dark {
+  --bg: #111827;
+  --surface: #1f2937;
+  --text: #f9fafb;
+  --muted: #cbd5e1;
+  --border: #374151;
+  --shadow: 0 8px 25px rgba(0, 0, 0, .2);
 }
 
-/* Tampilan dasar halaman */
+* { box-sizing: border-box; }
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: var(--background);
+  background: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  transition: background .2s, color .2s;
 }
 
-/* ==================================================
-   2. HEADER WEBSITE
-   ================================================== */
+button, input, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; }
+img { max-width: 100%; }
 
-.header {
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
-  color: var(--white);
-  text-align: center;
-  padding: 35px 16px;
-}
-
-/* Menghilangkan jarak berlebihan pada judul */
-.header h1 {
-  margin: 0;
-  font-size: 38px;
-}
-
-/* Memberikan warna berbeda pada huruf Q */
-.header h1 span {
-  color: #fbbf24;
-}
-
-.header p {
-  margin: 6px 0 0;
-}
-
-/* ==================================================
-   3. KONTEN UTAMA
-   ================================================== */
-
-.container {
-  width: min(1100px, 92%);
-  margin: 30px auto;
-}
-
-.search-section {
-  margin-bottom: 22px;
-}
-
-.search-section h2,
-.cart-section h2 {
-  margin-bottom: 5px;
-}
-
-.search-section p {
-  color: var(--muted);
-  margin-top: 0;
-}
-
-/* Kolom pencarian menu */
-#searchInput {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--white);
-  font-size: 16px;
-  outline-color: var(--primary);
-}
-
-/* ==================================================
-   4. KARTU MAKANAN DAN MINUMAN
-   ================================================== */
-
-/* Membuat menu tersusun dalam beberapa kolom */
-.menu-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-/* Tampilan setiap kartu menu */
-.menu-item {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px #00000008;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* Efek saat kursor berada di kartu */
-.menu-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px #00000012;
-}
-
-/* Gambar menu dibuat seragam */
-.menu-image {
-  display: block;
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-  background: #e5e7eb;
-}
-
-/* Area teks di bawah gambar */
-.menu-info {
-  padding: 15px;
-}
-
-.menu-info h3 {
-  margin: 0 0 8px;
-  font-size: 19px;
-}
-
-.menu-info p {
-  color: var(--muted);
-  margin: 0 0 14px;
-}
-
-/* Harga menu */
-.menu-price {
-  display: block;
-  color: var(--primary);
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-/* ==================================================
-   5. TOMBOL
-   ================================================== */
-
-button {
-  border: none;
-  border-radius: 8px;
-  padding: 11px 14px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-/* Tombol tambah menu */
-.add-button {
-  width: 100%;
-  color: var(--white);
-  background: var(--secondary);
-}
-
-.add-button:hover {
-  background: #0f766e;
-}
-
-/* Tombol pemesanan */
-.checkout-button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  color: var(--white);
-  background: var(--primary);
-  font-size: 16px;
-}
-
-.checkout-button:hover {
-  background: var(--primary-dark);
-}
-
-/* Tombol hapus pada keranjang */
-.remove-button {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.remove-button:hover {
-  background: #fecaca;
-}
-
-/* ==================================================
-   6. KERANJANG BELANJA
-   ================================================== */
-
-.cart-section {
-  margin-top: 35px;
-  padding: 22px;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-}
-
-.cart-item {
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 13px 0;
+  align-items: center;
+  gap: 16px;
+  padding: 14px max(5%, calc((100% - 1180px) / 2));
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
-.cart-item-info {
-  flex: 1;
-}
+.brand { font-size: 1.35rem; font-weight: 800; color: var(--primary); }
+.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-.cart-item-info p {
-  margin: 3px 0;
-  color: var(--muted);
-  font-size: 14px;
-}
+.container { max-width: 1180px; width: 90%; margin: 26px auto 50px; }
 
-/* Bagian total pembayaran */
-.cart-summary {
+.hero {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 10px;
-  font-size: 18px;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(24px, 5vw, 55px);
+  color: white;
+  background: linear-gradient(125deg, #4f46e5, #0d9488);
+  border-radius: 26px;
+  overflow: hidden;
 }
 
-.cart-summary strong {
-  color: var(--primary);
+.hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; margin: 12px 0; }
+.hero p { max-width: 500px; }
+.hero-emoji { font-size: clamp(3rem, 9vw, 7rem); }
+.eyebrow { font-size: .8rem; letter-spacing: 2px; font-weight: bold; }
+.status-pill { display: inline-block; padding: 5px 12px; border-radius: 20px; background: #ffffff24; }
+
+.toolbar { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin: 25px 0; }
+input, select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  outline-color: var(--primary);
 }
 
-#message {
-  color: var(--secondary);
-  font-weight: bold;
-}
-
-/* ==================================================
-   7. FOOTER
-   ================================================== */
-
-.footer {
-  margin-top: 40px;
-  padding: 20px;
-  background: #111827;
-  color: var(--white);
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 11px;
+  color: white;
+  background: var(--primary);
+  font-weight: 700;
   text-align: center;
 }
+.button:hover { background: var(--primary-dark); }
+.button:disabled { opacity: .45; cursor: not-allowed; }
+.button.secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.button.full { width: 100%; }
+.icon-button { border: 0; background: transparent; color: var(--text); font-size: 1.2rem; }
 
-/* ==================================================
-   8. RESPONSIVE UNTUK TABLET DAN HP
-   ================================================== */
+.section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+h2 { margin-bottom: 4px; }
+.section-heading p, .panel p { margin-top: 4px; }
+.muted { color: var(--muted); font-size: .92rem; }
 
-/* Tablet: menu menjadi dua kolom */
-@media (max-width: 800px) {
-  .menu-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.menu-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 18px 0 35px; }
+
+.menu-card {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
 }
 
-/* HP: menu menjadi satu kolom */
-@media (max-width: 520px) {
-  .container {
-    width: 94%;
-    margin: 18px auto;
-  }
+.menu-photo { width: 100%; height: 185px; object-fit: cover; display: block; background: var(--border); }
+.menu-info { padding: 16px; }
+.menu-info h3 { margin: 7px 0; }
+.menu-info p { color: var(--muted); font-size: .9rem; margin: 5px 0; }
+.menu-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 12px 0; }
+.price { font-size: 1.15rem; font-weight: 800; color: var(--primary); }
+.tag { display: inline-block; padding: 3px 9px; border-radius: 20px; background: #e0e7ff; color: #3730a3; font-size: .76rem; }
+.sold-out { color: var(--danger); font-weight: bold; }
 
-  .header h1 {
-    font-size: 32px;
-  }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; margin: 22px 0; box-shadow: var(--shadow); }
+.promo-row { display: flex; gap: 10px; max-width: 520px; }
 
-  .menu-list {
-    grid-template-columns: 1fr;
-  }
+.order-list, .rating-list { display: grid; gap: 12px; }
+.order-card { border: 1px solid var(--border); border-radius: 14px; padding: 15px; }
+.order-card-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.order-card p { margin: 5px 0; }
+.status-pill-small { display: inline-block; padding: 4px 9px; border-radius: 20px; background: #e0e7ff; color: #3730a3; font-size: .8rem; }
 
-  .menu-image {
-    height: 220px;
-  }
+.rating-form { display: grid; grid-template-columns: 1fr .7fr 1.5fr auto; gap: 10px; margin: 15px 0; }
+.rating-item { padding: 12px; border: 1px solid var(--border); border-radius: 12px; }
 
-  .cart-section {
-    padding: 15px;
-  }
+.dialog { width: min(560px, 94vw); max-height: 90vh; overflow: auto; padding: 22px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); color: var(--text); }
+.dialog::backdrop { background: rgba(15, 23, 42, .65); }
+.dialog-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dialog-top h2 { margin: 0; }
+.cart-line { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.quantity-controls { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.quantity-controls button { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); }
+.cart-summary { margin: 16px 0; }
+.cart-summary div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; }
+.total-line { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 12px !important; font-size: 1.1rem; }
+.checkout-form { display: grid; gap: 12px; }
+.checkout-form label { display: grid; gap: 5px; }
+.receipt { border: 1px dashed var(--border); padding: 18px; border-radius: 12px; margin: 14px 0; }
+.receipt-row { display: flex; justify-content: space-between; gap: 12px; margin: 7px 0; }
 
-  .cart-item {
-    flex-wrap: wrap;
-  }
+.toast { position: fixed; left: 50%; bottom: 20px; z-index: 30; transform: translateX(-50%); background: #111827; color: white; padding: 12px 18px; border-radius: 12px; box-shadow: var(--shadow); display: none; max-width: 90vw; }
+.toast.show { display: block; }
+.empty { padding: 24px; text-align: center; color: var(--muted); }
+.hidden { display: none !important; }
+.footer { text-align: center; color: var(--muted); padding: 22px; }
+
+@media (max-width: 850px) {
+  .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rating-form { grid-template-columns: 1fr 1fr; }
+  .rating-form input { grid-column: 1 / -1; }
 }
 
+@media (max-width: 600px) {
+  .topbar { position: static; align-items: flex-start; flex-direction: column; padding: 14px 5%; }
+  .header-actions { width: 100%; }
+  .header-actions .button { flex: 1; font-size: .82rem; padding: 9px 8px; }
+  .container { width: 92%; margin-top: 16px; }
+  .hero { border-radius: 18px; padding: 25px 20px; }
+  .hero-emoji { display: none; }
+  .toolbar { grid-template-columns: 1fr; }
+  .menu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .menu-photo { height: 125px; }
+  .menu-info { padding: 11px; }
+  .menu-info h3 { font-size: .98rem; }
+  .menu-info p { font-size: .82rem; }
+  .menu-meta { align-items: flex-start; flex-direction: column; }
+  .menu-info .button { width: 100%; padding: 9px 5px; font-size: .82rem; }
+  .panel { padding: 16px; }
+  .promo-row { flex-direction: column; }
+  .rating-form { grid-template-columns: 1fr; }
+  .rating-form input { grid-column: auto; }
+  .section-heading { align-items: flex-start; }
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #receiptContent, #receiptContent * { visibility: visible; }
+  #receiptContent { position: absolute; left: 0; top: 0; width: 100%; }
+}
