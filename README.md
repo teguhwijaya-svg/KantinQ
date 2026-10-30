@@ -113,9 +113,9 @@ Beberapa penyesuaian yang dilakukan antara lain:
 Website KantinQ dapat diakses melalui tautan GitHub Pages berikut:
 
 **Link Website:**  
-https://USERNAME.github.io/NAMA-REPOSITORY/
+https://teguhwijaya-svg.github.io/KantinQ/
 
-Ganti `USERNAME` dan `NAMA-REPOSITORY` sesuai akun serta nama repositori GitHub yang digunakan.
+
 
 ### 2. Panduan untuk Pelanggan
 
