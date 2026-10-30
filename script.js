@@ -117,18 +117,6 @@ if (!localStorage.getItem(SETTINGS_KEY)) {
 }
 
 let menus = readJSON(MENU_KEY, defaultMenus);
-// Cari menu berdasarkan nama, bukan hanya ID.
-const rotiCokelat = menus.find(
-  menu => menu.name.trim().toLowerCase() === "roti cokelat"
-);
-
-// Ganti foto lama dengan foto dari folder GitHub.
-if (rotiCokelat) {
-  rotiCokelat.image = "images/roti-cokelat.jpg";
-
-  // Simpan perubahan ke localStorage.
-  saveJSON(MENU_KEY, menus);
-}
 let orders = readJSON(ORDER_KEY, []);
 let cart = readJSON(CART_KEY, []);
 let promoApplied = false;
