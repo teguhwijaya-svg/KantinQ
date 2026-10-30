@@ -80,15 +80,15 @@ const defaultMenus = [
     image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: "m8",
-    name: "Roti Cokelat",
-    category: "Camilan",
-    price: 5000,
-    stock: 18,
-    sold: 0,
-    description: "Roti manis dengan isian cokelat.",
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80"
-  }
+  id: "m8",
+  name: "Roti Cokelat",
+  category: "Camilan",
+  price: 5000,
+  stock: 18,
+  sold: 0,
+  description: "Roti manis dengan isian cokelat.",
+  image: "https://images.unsplash.com/photo-1608198093002-ad4e005484d1?auto=format&fit=crop&w=800&q=80"
+}
 ];
 
 // Mengambil data dari localStorage atau membuat data awal.
